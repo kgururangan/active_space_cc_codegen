@@ -43,6 +43,6 @@ def main(projection):
 
 if __name__ == "__main__":
 
-    projection = 'ABcIJK'
+    projection = 'AbcIJK'
 
     main(projection)

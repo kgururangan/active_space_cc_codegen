@@ -1,6 +1,6 @@
 from utilities import string_replacer, flip_sign
 
-def generate_active_permutations(expr, out_proj_spin):
+def generate_active_permutations(expr, out_proj_spin, verbose=False):
     from itertools import combinations
 
     expr_list = []
@@ -52,34 +52,43 @@ def generate_active_permutations(expr, out_proj_spin):
                                     contr2 = contr02
                                     sign = sign0
 
-                                    # print('\n')
-                                    # print('Original:',contr1, contr2, sign)
-                                    # print(perm1, perm2, perm3, perm4, perm5, perm6, perm7, perm8)
-                                    # print('-----------------------------------------')
+                                    if verbose:
+                                        print('\n')
+                                        print('Original:',contr1, contr2, sign)
+                                        print(perm1, perm2, perm3, perm4, perm5, perm6, perm7, perm8)
+                                        print('-----------------------------------------')
 
                                     contr1, contr2, sign = _apply_swap(perm1, contr1, contr2, sign)
-                                    # print(perm1, contr1, contr2, sign)
+                                    if verbose:
+                                        print(perm1, contr1, contr2, sign)
 
                                     contr1, contr2, sign = _apply_swap(perm2, contr1, contr2, sign)
-                                    # print(perm2, contr1, contr2, sign)
+                                    if verbose:
+                                        print(perm2, contr1, contr2, sign)
 
                                     contr1, contr2, sign = _apply_swap(perm3, contr1, contr2, sign)
-                                    # print(perm3, contr1, contr2, sign)
+                                    if verbose:
+                                        print(perm3, contr1, contr2, sign)
 
                                     contr1, contr2, sign = _apply_swap(perm4, contr1, contr2, sign)
-                                    # print(perm4, contr1, contr2, sign)
+                                    if verbose:
+                                        print(perm4, contr1, contr2, sign)
 
                                     contr1, contr2, sign = _apply_swap(perm5, contr1, contr2, sign)
-                                    # print(perm5, contr1, contr2, sign)
+                                    if verbose:
+                                        print(perm5, contr1, contr2, sign)
 
                                     contr1, contr2, sign = _apply_swap(perm6, contr1, contr2, sign)
-                                    # print(perm6, contr1, contr2, sign)
+                                    if verbose:
+                                        print(perm6, contr1, contr2, sign)
 
                                     contr1, contr2, sign = _apply_swap(perm7, contr1, contr2, sign)
-                                    # print(perm7, contr1, contr2, sign)
+                                    if verbose:
+                                        print(perm7, contr1, contr2, sign)
 
                                     contr1, contr2, sign = _apply_swap(perm8, contr1, contr2, sign)
-                                    # print(perm8, contr1, contr2, sign)
+                                    if verbose:
+                                        print(perm8, contr1, contr2, sign)
 
                                     s = expr.split(',')
                                     s1 = s[0].split('(')

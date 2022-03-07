@@ -119,7 +119,7 @@ def fix_t3_indices(arr, spin):
     return new_arr, sign_char
 
 
-def get_slicestr_t3_v2(contr):
+def get_slicestr_t3(contr):
     slicestr = [None] * 6
     for idx, c in enumerate(contr):
         typeOfIndex = type_of_index(c)

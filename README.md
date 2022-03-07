@@ -1,8 +1,14 @@
-# Sample GitLab Project
+# Active-Space Coupled-Cluster Code Generator
 
-This sample project shows how a project in GitLab looks for demonstration purposes. It contains issues, merge requests and Markdown files in many branches,
-named and filled with lorem ipsum.
-
-You can look around to get an idea how to structure your project and, when done, you can safely delete this project.
-
-[Learn more about creating GitLab projects.](https://docs.gitlab.com/ee/gitlab-basics/create-project.html)
+This repository contains code to automatically generate the numerous tensor
+contractions arising from active-space coupled-cluster (CC) models, 
+such as those of the CCSDt and CCSDtq types. The resulting expressions
+are spin-integrated. The expressions for the 
+active-space theory of interest are formed by first taking a set of 
+factorized spin-integrated diagrams corresponding to the parent CC 
+theory (e.g., CCSDT or CCSDTQ), and subsequently applying all possible 
+combinations of  active/inactive partitioning to the external and contracted
+lines. In doing so, special attention must be paid to account for all
+weight and phase factors as well as the additional diagrams that arise from
+permuting non-equivalent indices belonging to different sectors (active or
+inactive) of the single-particle orbital space. 

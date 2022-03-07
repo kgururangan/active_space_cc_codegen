@@ -1,7 +1,7 @@
 from diagramperms import generate_active_permutations, get_counting_dict
 from parser import parse_expression
 from contraction import binary_active_contraction
-from indices import check_include_term, convert_char_to_ov, get_slicestr_t3_v2
+from indices import check_include_term, convert_char_to_ov, get_slicestr_t3
 
 def write_HBarT3_contractions(expr_list, out_proj, out_proj_spin, nact_scheme=1, print_term=False):
 
@@ -117,7 +117,7 @@ def write_HBarT3_contractions(expr_list, out_proj, out_proj_spin, nact_scheme=1,
                 if term2 == 'T3D' or term2 == 't3D' or term2 == 't3d':
                     term2 = 'T.bbb'
 
-                slicestr_t3 = get_slicestr_t3_v2(contr2)
+                slicestr_t3 = get_slicestr_t3(contr2)
 
                 term_print_list.append(
                     {'sign': sign,
