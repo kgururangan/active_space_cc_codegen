@@ -1,40 +1,12 @@
 from indices import fix_t3_indices, type_of_index
 
-
 def binary_active_contraction(contr_chars, spin_contr, obj1, obj2, sign_orig):
-    # contr_chars, spin_contr, obj1, obj2, sign_orig = parse_expression(expr)
+
     num_contr_inds = len(contr_chars)
 
     if num_contr_inds == 1:
 
-        d1 = []
-        ct = 0
 
-        for ip, p in enumerate([contr_chars[0].lower(), contr_chars[0].upper()]):
-
-            weight = ''
-
-            arr1 = list(obj1['chars'])
-            arr1[obj1['contr_idx'][0]] = p
-            arr2 = list(obj2['chars'])
-            arr2[obj2['contr_idx'][0]] = p
-
-            new_arr, sign2 = fix_t3_indices(arr2, obj2['spin'])
-            if sign2 in ['', '+']:
-                sign = sign_orig
-            else:
-                if sign_orig in ['', '+']:
-                    sign = '-'
-                else:
-                    sign = '+'
-
-            signcoef = sign + weight
-            term1 = obj1['sym'] + '(' + ''.join(arr1) + ')'
-            term2 = obj2['sym'] + '(' + ''.join(new_arr) + ')'
-
-            d1.append(signcoef + ',' + term1 + ',' + term2)
-
-            ct += 1
 
     if num_contr_inds == 2:
 
@@ -80,8 +52,10 @@ def binary_active_contraction(contr_chars, spin_contr, obj1, obj2, sign_orig):
                         sign = '+'
 
                 coef = sign + weight
-                term1 = obj1['sym'] + '(' + ''.join(arr1) + ')'
-                term2 = obj2['sym'] + '(' + ''.join(new_arr) + ')'
+                term1 = obj1['symbol'] + '(' + ''.join(arr1) + ')'
+                term2 = obj2['symbol'] + '(' + ''.join(new_arr) + ')'
+
+                new_obj1 = {'symbol' : obj1['symbol']}
 
                 d1.append(coef + ',' + term1 + ',' + term2)
 
@@ -149,8 +123,8 @@ def binary_active_contraction(contr_chars, spin_contr, obj1, obj2, sign_orig):
                             sign = '+'
 
                     signcoef = sign + weight
-                    term1 = obj1['sym'] + '(' + ''.join(arr1) + ')'
-                    term2 = obj2['sym'] + '(' + ''.join(new_arr) + ')'
+                    term1 = obj1['symbol'] + '(' + ''.join(arr1) + ')'
+                    term2 = obj2['symbol'] + '(' + ''.join(new_arr) + ')'
 
                     d1.append(signcoef + ',' + term1 + ',' + term2)
 
@@ -261,10 +235,39 @@ def binary_active_contraction(contr_chars, spin_contr, obj1, obj2, sign_orig):
                                 sign = '+'
 
                         coef = sign + weight
-                        term1 = obj1['sym'] + '(' + ''.join(arr1) + ')'
-                        term2 = obj2['sym'] + '(' + ''.join(new_arr) + ')'
+                        term1 = obj1['symbol'] + '(' + ''.join(arr1) + ')'
+                        term2 = obj2['symbol'] + '(' + ''.join(new_arr) + ')'
 
                         d1.append(coef + ',' + term1 + ',' + term2)
 
                         ct += 1
     return d1
+
+def single_contraction(expression):
+
+    for ip, p in enumerate([expression.contracted.lower(), contr_chars[0].upper()]):
+
+        weight = ''
+
+        arr1 = list(obj1['chars'])
+        arr1[obj1['contr_idx'][0]] = p
+        arr2 = list(obj2['chars'])
+        arr2[obj2['contr_idx'][0]] = p
+
+        new_arr, sign2 = fix_t3_indices(arr2, obj2['spin'])
+        if sign2 in ['', '+']:
+            sign = sign_orig
+        else:
+            if sign_orig in ['', '+']:
+                sign = '-'
+            else:
+                sign = '+'
+
+
+
+        signcoef = sign + weight
+        term1 = obj1['symbol'] + '(' + ''.join(arr1) + ')'
+        term2 = obj2['symbol'] + '(' + ''.join(new_arr) + ')'
+
+        d1.append(signcoef + ',' + term1 + ',' + term2)
+

@@ -86,7 +86,7 @@ def fix_t3_indices(arr, spin):
     sign = 1.0
 
     perm = list(range(6))
-    if spin in ['A', 'a']:
+    if spin in ['aaa']:
         particles = arr[:3]
         holes = arr[3:]
         perm[:3] = fix_particle_index(particles)
@@ -95,7 +95,7 @@ def fix_t3_indices(arr, spin):
         sign = sign * signPermutation(perm[:3]) * signPermutation([x - 3 for x in perm[3:]])
 
     perm = list(range(6))
-    if spin in ['b', 'B']:
+    if spin in ['aab']:
         particles = arr[:2]
         holes = arr[3:5]
         perm[:2] = fix_particle_index(particles)
@@ -104,7 +104,7 @@ def fix_t3_indices(arr, spin):
         sign = sign * signPermutation(perm[:2]) * signPermutation([x - 3 for x in perm[3:5]])
 
     perm = list(range(6))
-    if spin in ['c', 'C']:
+    if spin in ['abb']:
         particles = arr[1:3]
         holes = arr[4:]
         perm[1:3] = [x + 1 for x in fix_particle_index(particles)]
@@ -113,7 +113,7 @@ def fix_t3_indices(arr, spin):
         sign = sign * signPermutation([x - 1 for x in perm[1:3]]) * signPermutation([x - 4 for x in perm[4:]])
 
     perm = list(range(6))
-    if spin in ['D', 'd']:
+    if spin in ['bbb']:
         particles = arr[:3]
         holes = arr[3:]
         perm[:3] = fix_particle_index(particles)

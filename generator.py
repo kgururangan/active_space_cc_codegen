@@ -5,156 +5,57 @@ from contraction import binary_active_contraction
 from indices import check_include_term, convert_char_to_ov, get_slicestr_t3, type_of_index, is_free_index
 
 
-def write_HBarT3_contractions(expr_list, out_proj, out_proj_spin, weight0, residual_term, nact_scheme=1):
+def active_space_generator(list_of_expressions, projection, spincase, weight0, residual_term, nact_scheme=1):
 
-    num_expr = len(expr_list)
-    D = [None] * num_expr
+    all_expressions = []
+    for i, expr in enumerate(list_of_expressions):
+        # for each expression, generate all unique active-space diagram permutations
+        all_expressions.append(generate_active_permutations(expr, spincase))
 
-    for inm, op in enumerate(out_proj):
-        if type_of_index(op) == 'active_hole':
-            #if is_free_index(op):
-            #    residual_term += 'h'
-            #else:
-            residual_term += 'O'
-        if type_of_index(op) == 'active_particle':
-            #if is_free_index(op):
-            #    residual_term += 'p'
-            #else:
-            residual_term += 'V'
-        if type_of_index(op) == 'inactive_hole':
-            #if is_free_index(op):
-            #    residual_term += 'h'
-            #else:
-            residual_term += 'o'
-        if type_of_index(op) == 'inactive_particle':
-            #if is_free_index(op):
-            #    residual_term += 'p'
-            #else:
-            residual_term += 'v'
+    # get the container label for the output quantity (e.g., residual)
+    residual_term = get_residual_label(projection, residual_term)
 
+    active_space_contractions = []
+    # loop over the provided expressions
+    nterm = 0
+    for expr in all_expressions:
+        # loop over unique active-space diagrams
+        for expr_perm in expr:
 
-    nterms = 0
-    for i, expr in enumerate(expr_list):
-
-        expr_perm_list = generate_active_permutations(expr, out_proj_spin)
-
-        for expr1 in expr_perm_list:
-
-            contr_chars, spin_contr, obj1, obj2, sign_orig = parse_expression(expr1)
-
-            D = binary_active_contraction(contr_chars, spin_contr, obj1, obj2, sign_orig)
+            # get all possible active-space contractions by splitting the contraction lines into active/inactive
+            all_contractions = binary_active_contraction(contr_chars, spin_contr, obj1, obj2, sign_orig)
 
             # filter out those terms that have fewer than nact_scheme active indices in either particle or hole
-            D2 = []
-            for idx, d in enumerate(D):
-
-                s = d.split(',')
+            retained_contractions = []
+            for c in enumerate(all_contractions):
+                # get the indices describing the T3 operator
+                s = c.split(',')
                 s2 = s[2].split('(')
                 term2 = s2[0]
                 contr2 = s2[1][:-1]
-
+                # based on the number of active/inactive labels, decide whether
+                # this T3 block belongs to the active-space CC calculation
                 include_term = check_include_term(contr2, nact_scheme)
                 if include_term:
-                    D2.append(d)
-
-            term_print_list = []
-            for idx, d in enumerate(D2):
-
-                s = d.split(',')
-
-                sign = s[0][0]
-                weight = s[0][1:]
-                if weight == '': weight = '1.0'
-
-                s1 = s[1].split('(')
-                term1 = s1[0]
-                contr1 = s1[1][:-1]
-
-                if term1 == 'h1A' or term1 == 'h1a':
-                    term1 = 'H.a'
-                    double_spin_string = 'aa'
-                if term1 == 'h1B' or term1 == 'h1b':
-                    term1 = 'H.b'
-                    double_spin_string = 'bb'
-                if term1 == 'h2A' or term1 == 'h2a':
-                    term1 = 'H.aa'
-                    double_spin_string = 'aaaa'
-                if term1 == 'h2B' or term1 == 'h2b':
-                    term1 = 'H.ab'
-                    double_spin_string = 'abab'
-                if term1 == 'h2C' or term1 == 'h2c':
-                    term1 = 'H.bb'
-                    double_spin_string = 'bbbb'
-
-                slicestr = ''
-                actslicestr = ''
-                for ind, c in enumerate(contr1):
-
-
-
-                    o_or_v = convert_char_to_ov(c)
-                    slicestr += o_or_v
-
-                    # check if string on term1 corresponds to a free index (line extending to right)
-                    # also present in the output string. If so, can simply use entire occ/unocc manifold.
-                    if c in ['e', 'f', 'm', 'n', 'E', 'F', 'M', 'N'] and c in out_proj:
-                        actslicestr += ':,'
-                    else:
-                        if c.upper() == c:
-                            if o_or_v == 'o':
-                                c1 = 'O'
-                            if o_or_v == 'v':
-                                c1 = 'V'
-                        if c.upper() != c:
-                            if o_or_v == 'o':
-                                c1 = 'o'
-                            if o_or_v == 'v':
-                                c1 = 'v'
-
-                        actslicestr += c1 + double_spin_string[ind] + ','
-
-                s2 = s[2].split('(')
-                term2 = s2[0]
-                contr2 = s2[1][:-1]
-
-                if term2 == 'T3A' or term2 == 't3A' or term2 == 't3a':
-                    term2 = 'T.aaa'
-                if term2 == 'T3B' or term2 == 't3B' or term2 == 't3b':
-                    term2 = 'T.aab'
-                if term2 == 'T3C' or term2 == 't3C' or term2 == 't3c':
-                    term2 = 'T.abb'
-                if term2 == 'T3D' or term2 == 't3D' or term2 == 't3d':
-                    term2 = 'T.bbb'
-
-                slicestr_t3 = get_slicestr_t3(contr2)
-
-                term_print_list.append(
-                    {'sign': sign,
-                     'weight': weight,
-                     'contr1': contr1,
-                     'contr2': contr2,
-                     'out_proj': out_proj,
-                     'term1': term1,
-                     'slicestr': slicestr,
-                     'actslicestr': actslicestr[:-1],
-                     'term2': term2,
-                     'slicestr_t3': slicestr_t3}
-                )
+                    retained_contractions.append(c)
+            active_space_contractions.append(retained_contractions)
 
             # find the permutation weight using last contr1 and contr2
-            perm_weight = get_permutation_weight(contr1, contr2, out_proj_spin)
+            perm_weight = get_permutation_weight(contr1, contr2, spincase)
 
-            # print the term
-            print(residual_term + ' += (' + str(perm_weight) + '/' + str(weight0) + ') * (')
 
-            for t in term_print_list:
-                print('        ' + t['sign'] + t['weight'] + '*' + 'np.einsum(' + "'" + t['contr1'] + ',' + t[
-                    'contr2'] + '->' + t['out_proj'] + "'" + ', ' \
-                      + t['term1'] + "." + t['slicestr'] + "[" + t['actslicestr'] + "]" + ', ' + t['term2'] + "." + t[
-                          'slicestr_t3'] + ', ' + 'optimize=True)')
+    return active_space_contractions, residual_term
 
-            print(')')
+def get_residual_label(projection, residual_term):
 
-            nterms += 1
+    for inm, op in enumerate(projection):
+        if type_of_index(op) == 'active_hole':
+            residual_term += 'O'
+        if type_of_index(op) == 'active_particle':
+            residual_term += 'V'
+        if type_of_index(op) == 'inactive_hole':
+            residual_term += 'o'
+        if type_of_index(op) == 'inactive_particle':
+            residual_term += 'v'
 
-    return D2, nterms
+    return residual_term

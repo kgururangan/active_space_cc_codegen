@@ -1,16 +1,10 @@
-from utilities import string_replacer, flip_sign
+from utilities import string_replacer, unique_objects
+from term import Term, BinaryExpression
 
-def generate_active_permutations(expr, out_proj_spin, verbose=False):
+def generate_active_permutations(reference_expression, projection_spincase, verbose=False):
     from itertools import combinations
 
-    expr_list = []
-
-    sign0 = expr[0]
-    s = expr.split(',')
-    s1 = s[0].split('(')
-    contr01 = s1[1][0:-1]
-    s2 = s[1].split('(')
-    contr02 = s2[1][0:-1]
+    expression_permutations = []
 
     def _apply_swap(perm, contr1, contr2, sign):
         import re
@@ -28,7 +22,7 @@ def generate_active_permutations(expr, out_proj_spin, verbose=False):
         for idx in result2:
             contr2 = string_replacer(contr2, p1, idx)
 
-        return contr1, contr2, flip_sign(sign)
+        return contr1, contr2, -1.0 * sign
 
     def _get_products(list1, list2):
 
@@ -37,8 +31,8 @@ def generate_active_permutations(expr, out_proj_spin, verbose=False):
         else:
             return [[1]]
 
-    dict_1 = get_swapping_dict(contr01, out_proj_spin)
-    dict_2 = get_swapping_dict(contr02, out_proj_spin)
+    dict_1 = get_swapping_dict(reference_expression.A.indices, projection_spincase)
+    dict_2 = get_swapping_dict(reference_expression.B.indices, projection_spincase)
 
     for perm1 in _get_products(dict_1['act_hole_alpha'], dict_2['core_alpha']):
         for perm2 in _get_products(dict_1['core_alpha'], dict_2['act_hole_alpha']):
@@ -48,9 +42,9 @@ def generate_active_permutations(expr, out_proj_spin, verbose=False):
                         for perm6 in _get_products(dict_1['core_beta'], dict_2['act_hole_beta']):
                             for perm7 in _get_products(dict_1['act_particle_beta'], dict_2['virt_beta']):
                                 for perm8 in _get_products(dict_1['virt_beta'], dict_2['act_particle_beta']):
-                                    contr1 = contr01
-                                    contr2 = contr02
-                                    sign = sign0
+                                    contr1 = reference_expression.A.indices
+                                    contr2 = reference_expression.B.indices
+                                    sign = reference_expression.sign
 
                                     if verbose:
                                         print('\n')
@@ -90,19 +84,24 @@ def generate_active_permutations(expr, out_proj_spin, verbose=False):
                                     if verbose:
                                         print(perm8, contr1, contr2, sign)
 
-                                    s = expr.split(',')
-                                    s1 = s[0].split('(')
-                                    s2 = s[1].split('(')
+                                    permuted_term_1 = Term(reference_expression.A.symbol,
+                                                           reference_expression.A.spin,
+                                                           contr1)
+                                    permuted_term_2 = Term(reference_expression.B.symbol,
+                                                           reference_expression.B.spin,
+                                                           contr2)
+                                    permuted_expression = BinaryExpression(sign,
+                                                                           reference_expression.weight,
+                                                                           permuted_term_1,
+                                                                           permuted_term_2)
 
-                                    term = [sign, s1[0][1:], '(', contr1, '),', s2[0], '(', contr2, ')']
+                                    expression_permutations.append(permuted_expression)
 
-                                    expr_list.append(''.join(term))
-
-    return list(set(expr_list))
+    return unique_objects(expression_permutations)
 
 
 def get_swapping_dict(contr, spincase):
-    if spincase == 'A':
+    if spincase in ['aaa', 'aa', 'a']:
         dict_out = {'virt_alpha': [x for x in ['a', 'b', 'c'] if x in contr],
                     'core_alpha': [x for x in ['i', 'j', 'k'] if x in contr],
                     'act_hole_alpha': [x for x in ['I', 'J', 'K'] if x in contr],
@@ -112,7 +111,7 @@ def get_swapping_dict(contr, spincase):
                     'act_hole_beta': [],
                     'act_particle_beta': []
                     }
-    if spincase == 'B':
+    if spincase in ['aab']:
         dict_out = {'virt_alpha': [x for x in ['a', 'b'] if x in contr],
                     'core_alpha': [x for x in ['i', 'j'] if x in contr],
                     'act_hole_alpha': [x for x in ['I', 'J'] if x in contr],
@@ -122,7 +121,7 @@ def get_swapping_dict(contr, spincase):
                     'act_hole_beta': [x for x in ['K'] if x in contr],
                     'act_particle_beta': [x for x in ['C'] if x in contr]
                     }
-    if spincase == 'C':
+    if spincase in ['abb', 'ab']:
         dict_out = {'virt_alpha': [x for x in ['a'] if x in contr],
                     'core_alpha': [x for x in ['i'] if x in contr],
                     'act_hole_alpha': [x for x in ['I'] if x in contr],
@@ -132,7 +131,7 @@ def get_swapping_dict(contr, spincase):
                     'act_hole_beta': [x for x in ['J', 'K'] if x in contr],
                     'act_particle_beta': [x for x in ['B', 'C'] if x in contr]
                     }
-    if spincase == 'D':
+    if spincase == ['bbb', 'bb', 'b']:
         dict_out = {'virt_beta': [x for x in ['a', 'b', 'c'] if x in contr],
                     'core_beta': [x for x in ['i', 'j', 'k'] if x in contr],
                     'act_hole_beta': [x for x in ['I', 'J', 'K'] if x in contr],
@@ -157,3 +156,4 @@ def get_swapping_dict(contr, spincase):
             dict_out[key] = [dict_out[key][0]]
 
     return dict_out
+

@@ -4,7 +4,7 @@ from generator import write_HBarT3_contractions
 def write_vt3a_intermediate(projection):
 
     weight0 = 1.0
-    out_proj_spin = 'A'
+    out_proj_spin = 'aa'
     residual_term = 'I2' + out_proj_spin + '_'
 
     if projection.lower() == 'amij':
@@ -36,7 +36,7 @@ def write_vt3a_intermediate(projection):
 def write_vt3b_intermediate(projection):
 
     weight0 = 1.0
-    out_proj_spin = 'B'
+    out_proj_spin = 'ab'
     residual_term = 'I2' + out_proj_spin + '_'
 
     if projection.lower() == 'amij': # vooo

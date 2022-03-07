@@ -20,11 +20,11 @@ def signPermutation(p):
                 sign *= -1.0
     return sign
 
-def flip_sign(sign):
-    if sign == '+':
-        return '-'
-    if sign == '-':
+def sign_to_str(sign):
+    if sign == 1.0:
         return '+'
+    else:
+        return '-'
 
 def string_replacer(s, newstring, index, nofail=False):
     if not nofail and index not in range(len(s)):
@@ -46,3 +46,57 @@ def change_term_to_projection(string, reference_string):
                 string_out = string_out[:i] + s0 + string_out[i+1:]
 
     return string_out
+
+def convert_spin_representation(symbol_in):
+    """Converts from the spin-integrated representation of operators,
+    such as T3A, T3B, T3C, T3D, and H1A, H1B, H2A, H2B, H2B, etc.
+    into the class-based datastrcture T.aaa.xxxxx etc. used in CCpy."""
+    spin = symbol_in[-1].upper()
+    if '1' in symbol_in:
+        if spin == 'A':
+            return ''.join([symbol_in[0].upper(), '.a'])
+        if spin == 'B':
+            return ''.join([symbol_in[0].upper(), '.b'])
+
+    if '2' in symbol_in:
+        if spin == 'A':
+            return ''.join([symbol_in[0].upper(), '.aa'])
+        if spin == 'B':
+            return ''.join([symbol_in[0].upper(), '.ab'])
+        if spin == 'C':
+            return ''.join([symbol_in[0].upper(), '.bb'])
+
+    if '3' in symbol_in:
+        if spin == 'A':
+            return ''.join([symbol_in[0].upper(), '.aaa'])
+        if spin == 'B':
+            return ''.join([symbol_in[0].upper(), '.aab'])
+        if spin == 'C':
+            return ''.join([symbol_in[0].upper(), '.abb'])
+        if spin == 'D':
+            return ''.join([symbol_in[0].upper(), '.bbb'])
+
+    if '4' in symbol_in:
+        if spin == 'A':
+            return ''.join([symbol_in[0].upper(), '.aaaa'])
+        if spin == 'B':
+            return ''.join([symbol_in[0].upper(), '.aaab'])
+        if spin == 'C':
+            return ''.join([symbol_in[0].upper(), '.aabb'])
+        if spin == 'D':
+            return ''.join([symbol_in[0].upper(), '.abbb'])
+        if spin == 'E':
+            return ''.join([symbol_in[0].upper(), '.bbbb'])
+
+def unique_objects(L):
+    L_unique = []
+    for i, obj_i in enumerate(L):
+        flag = True
+        for j in range(i):
+            if L[j] == obj_i:
+                flag = False
+        if flag:
+            L_unique.append(obj_i)
+    return L_unique
+
+

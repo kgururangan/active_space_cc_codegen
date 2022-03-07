@@ -1,9 +1,9 @@
 
-def get_permutation_weight(contr1, contr2, out_proj_spin):
+def get_permutation_weight(contr1, contr2, spincase):
 
     # find the permutation weight using last contr1 and contr2
-    dict_1 = get_counting_dict(contr1, out_proj_spin)
-    dict_2 = get_counting_dict(contr2, out_proj_spin)
+    dict_1 = get_counting_dict(contr1, spincase)
+    dict_2 = get_counting_dict(contr2, spincase)
 
     perm_weight = 1.0
     for key in dict_1.keys():
@@ -18,7 +18,7 @@ def get_permutation_weight(contr1, contr2, out_proj_spin):
     return perm_weight
 
 def get_counting_dict(contr, spincase):
-    if spincase == 'A':
+    if spincase in ['aaa', 'aa', 'a']:
         return {'num_virt_alpha': contr.count('a') + contr.count('b') + contr.count('c'),
                 'num_core_alpha': contr.count('i') + contr.count('j') + contr.count('k'),
                 'num_act_hole_alpha': contr.count('I') + contr.count('J') + contr.count('K'),
@@ -28,7 +28,7 @@ def get_counting_dict(contr, spincase):
                 'num_act_hole_beta': 0,
                 'num_act_particle_beta': 0
                 }
-    if spincase == 'B':
+    if spincase in ['aab']:
         return {'num_virt_alpha': contr.count('a') + contr.count('b'),
                 'num_core_alpha': contr.count('i') + contr.count('j'),
                 'num_act_hole_alpha': contr.count('I') + contr.count('J'),
@@ -38,7 +38,7 @@ def get_counting_dict(contr, spincase):
                 'num_act_hole_beta': contr.count('K'),
                 'num_act_particle_beta': contr.count('C')
                 }
-    if spincase == 'C':
+    if spincase in ['abb', 'ab']:
         return {'num_virt_alpha': contr.count('a'),
                 'num_core_alpha': contr.count('i'),
                 'num_act_hole_alpha': contr.count('I'),
@@ -48,7 +48,7 @@ def get_counting_dict(contr, spincase):
                 'num_act_hole_beta': contr.count('J') + contr.count('K'),
                 'num_act_particle_beta': contr.count('B') + contr.count('C')
                 }
-    if spincase == 'D':
+    if spincase in ['bbb', 'bb', 'b']:
         return {'num_virt_beta': contr.count('a') + contr.count('b') + contr.count('c'),
                 'num_core_beta': contr.count('i') + contr.count('j') + contr.count('k'),
                 'num_act_hole_beta': contr.count('I') + contr.count('J') + contr.count('K'),
