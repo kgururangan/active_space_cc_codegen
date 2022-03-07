@@ -51,20 +51,6 @@ def type_of_index(char):
     if not is_active(char1) and particle_or_hole(char1) == 'particle':
         return 'inactive_particle'
 
-def check_include_term(contr, nact_scheme):
-    num_act_hole = 0
-    num_act_particle = 0
-    for idx, c in enumerate(contr):
-        if c.isupper():
-            if idx < 3:
-                num_act_particle += 1
-            else:
-                num_act_hole += 1
-    include_term = False
-    if num_act_hole >= nact_scheme and num_act_particle >= nact_scheme:
-        include_term = True
-    return include_term
-
 
 def fix_particle_index(idx):
     act_idx = [0] * len(idx)
@@ -121,12 +107,12 @@ def fix_t3_indices(arr, spin):
         new_arr = [arr[i] for i in perm]
         sign = sign * signPermutation(perm[:3]) * signPermutation([x - 3 for x in perm[3:]])
 
-    if sign == -1.0:
-        sign_char = '-'
-    else:
-        sign_char = ''
+    # if sign == -1.0:
+    #     sign_char = '-'
+    # else:
+    #     sign_char = ''
 
-    return new_arr, sign_char
+    return new_arr, sign
 
 
 def get_slicestr_t3(contr):

@@ -99,4 +99,16 @@ def unique_objects(L):
             L_unique.append(obj_i)
     return L_unique
 
-
+def check_include_term(contr, nact_scheme):
+    num_act_hole = 0
+    num_act_particle = 0
+    for idx, c in enumerate(contr):
+        if c.isupper():
+            if idx < 3:
+                num_act_particle += 1
+            else:
+                num_act_hole += 1
+    include_term = False
+    if num_act_hole >= nact_scheme and num_act_particle >= nact_scheme:
+        include_term = True
+    return include_term

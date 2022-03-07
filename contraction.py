@@ -1,273 +1,273 @@
 from indices import fix_t3_indices, type_of_index
+from term import Term, BinaryExpression
+from utilities import check_include_term
 
-def binary_active_contraction(contr_chars, spin_contr, obj1, obj2, sign_orig):
+def contract(expression, num_active):
 
-    num_contr_inds = len(contr_chars)
+    retained_contractions = []
 
-    if num_contr_inds == 1:
+    if len(expression.contracted) == 1:
+        all_contractions = single_contraction(expression)
+    if len(expression.contracted) == 2:
+        all_contractions = double_contraction(expression)
+    if len(expression.contracted) == 3:
+        all_contractions = triple_contraction(expression)
+    if len(expression.contracted) == 4:
+        all_contractions = quadruple_contraction(expression)
+
+    # retain only those expressions in which T (or R) is restricted to
+    # the appropriate active space paritioning
+    for expr in all_contractions:
+        if check_include_term(expr.B.indices, nact_scheme):
+            retained_contractions.append(expr)
+
+    return retained_contractions
 
 
+def single_contraction(expression):
 
-    if num_contr_inds == 2:
+    list_of_expressions = []
+    for ip, p in enumerate([x.lower() for x in expression.contracted] + [x.upper() for x in expression.contracted]):
 
-        d1 = []
-        ct = 0
+        weight = 1.0
+        sign = expression.sign
 
-        typ1 = type_of_index(contr_chars[0])
-        typ2 = type_of_index(contr_chars[1])
-        spin1 = spin_contr[0]
-        spin2 = spin_contr[1]
+        arr1 = list(expression.A.indices)
+        arr1[expression.A.contracted_indices[0]] = p
 
-        equivalence = ''
-        if [typ1, spin1] == [typ2, spin2]:
-            equivalence = '12'
+        arr2 = list(expression.B.indices)
+        arr2[expression.B.contracted_indices[0]] = p
 
-        for ip, p in enumerate([contr_chars[0].lower(), contr_chars[0].upper()]):
-            for iq, q in enumerate([contr_chars[1].lower(), contr_chars[1].upper()]):
+        new_arr, sign_perm = fix_t3_indices(arr2, expression.B.spin)
+        sign = expression.sign * sign_perm
 
-                weight = ''
+        term1 = Term(expression.A.symbol,
+                     expression.A.spin,
+                     ''.join(arr1))
 
-                if equivalence == '12':
-                    if ip < iq: continue
+        term2 = Term(expression.B.symbol,
+                     expression.B.spin,
+                     ''.join(new_arr))
+
+        list_of_expressions.append(BinaryExpression(sign, expression.weight, term1, term2))
+
+    return list_of_expressions
+
+def double_contraction(expression):
+
+    typ1 = type_of_index(expression.contracted[0])
+    typ2 = type_of_index(expression.contracted[1])
+    spin1 = expression.spin_of_contracted[0]
+    spin2 = expression.spin_of_contracted[1]
+
+    equivalence = ''
+    if [typ1, spin1] == [typ2, spin2]:
+        equivalence = '12'
+
+    list_of_expressions = []
+    for ip, p in enumerate([x.lower() for x in expression.contracted[0]] + [x.upper() for x in expression.contracted[0]]):
+        for iq, q in enumerate([x.lower() for x in expression.contracted[1]] + [x.upper() for x in expression.contracted[1]]):
+
+            weight = 1.0
+            sign = expression.sign
+
+            if equivalence == '12':
+                if ip < iq: continue
+
+            typ1 = type_of_index(p)
+            typ2 = type_of_index(q)
+            if [typ1, spin1] == [typ2, spin2]:
+                weight = 0.5
+
+            arr1 = list(expression.A.indices)
+            arr1[expression.A.contracted_indices[0]] = p
+            arr1[expression.A.contracted_indices[1]] = q
+
+            arr2 = list(expression.B.indices)
+            arr2[expression.B.contracted_indices[0]] = p
+            arr2[expression.B.contracted_indices[1]] = q
+
+            new_arr, sign_perm = fix_t3_indices(arr2, expression.B.spin)
+            sign = expression.sign * sign_perm
+
+            term1 = Term(expression.A.symbol,
+                         expression.A.spin,
+                         ''.join(arr1))
+
+            term2 = Term(expression.B.symbol,
+                         expression.B.spin,
+                         ''.join(new_arr))
+
+            list_of_expressions.append(BinaryExpression(sign, weight, term1, term2))
+
+    return list_of_expressions
+
+def triple_contraction(expression):
+
+    typ1 = type_of_index(expression.contracted[0])
+    typ2 = type_of_index(expression.contracted[1])
+    typ3 = type_of_index(expression.contracted[2])
+    spin1 = expression.spin_of_contracted[0]
+    spin2 = expression.spin_of_contracted[1]
+    spin3 = expression.spin_of_contracted[2]
+
+    equivalence = ''
+    if [typ1, spin1] == [typ2, spin2]:
+        equivalence = '12'
+    if [typ1, spin2] == [typ3, spin3]:
+        equivalence = '13'
+    if [typ2, spin2] == [typ3, spin3]:
+        equivalence = '23'
+
+    list_of_expressions = []
+    for ip, p in enumerate([x.lower() for x in expression.contracted[0]] + [x.upper() for x in expression.contracted[0]]):
+        for iq, q in enumerate([x.lower() for x in expression.contracted[1]] + [x.upper() for x in expression.contracted[1]]):
+            for ir, r in enumerate([x.lower() for x in expression.contracted[2]] + [x.upper() for x in expression.contracted[2]]):
+
+                weight = 1.0
+                sign = expression.sign
 
                 typ1 = type_of_index(p)
                 typ2 = type_of_index(q)
-                if [typ1, spin1] == [typ2, spin2]:
-                    weight = '0.5'
+                typ3 = type_of_index(r)
 
-                arr1 = list(obj1['chars'])
-                arr1[obj1['contr_idx'][0]] = p
-                arr1[obj1['contr_idx'][1]] = q
-                arr2 = list(obj2['chars'])
-                arr2[obj2['contr_idx'][0]] = p
-                arr2[obj2['contr_idx'][1]] = q
+                if equivalence == '12':
+                    if ip < iq: continue
+                if equivalence == '13':
+                    if ip < ir: continue
+                if equivalence == '23':
+                    if iq < ir: continue
 
-                new_arr, sign2 = fix_t3_indices(arr2, obj2['spin'])
-                if sign2 in ['', '+']:
-                    sign = sign_orig
-                else:
-                    if sign_orig in ['', '+']:
-                        sign = '-'
-                    else:
-                        sign = '+'
+                if [typ1, spin1] == [typ2, spin2] or \
+                        [typ1, spin1] == [typ3, spin3] or \
+                        [typ2, spin2] == [typ3, spin3]:
+                    weight = 0.5
 
-                coef = sign + weight
-                term1 = obj1['symbol'] + '(' + ''.join(arr1) + ')'
-                term2 = obj2['symbol'] + '(' + ''.join(new_arr) + ')'
+                arr1 = list(expression.A.indices)
+                arr1[expression.A.contracted_indices[0]] = p
+                arr1[expression.A.contracted_indices[1]] = q
+                arr1[expression.A.contracted_indices[2]] = r
 
-                new_obj1 = {'symbol' : obj1['symbol']}
+                arr2 = list(expression.B.indices)
+                arr2[expression.B.contracted_indices[0]] = p
+                arr2[expression.B.contracted_indices[1]] = q
+                arr2[expression.B.contracted_indices[2]] = r
 
-                d1.append(coef + ',' + term1 + ',' + term2)
+                new_arr, sign_perm = fix_t3_indices(arr2, expression.B.spin)
+                sign = expression.sign * sign_perm
 
-                ct += 1
+                term1 = Term(expression.A.symbol,
+                             expression.A.spin,
+                             ''.join(arr1))
 
-    if num_contr_inds == 3:
+                term2 = Term(expression.B.symbol,
+                             expression.B.spin,
+                             ''.join(new_arr))
 
-        d1 = []
-        ct = 0
+                list_of_expressions.append(BinaryExpression(sign, weight, term1, term2))
 
-        typ1 = type_of_index(contr_chars[0])
-        typ2 = type_of_index(contr_chars[1])
-        typ3 = type_of_index(contr_chars[2])
-        spin1 = spin_contr[0]
-        spin2 = spin_contr[1]
-        spin3 = spin_contr[2]
+    return list_of_expressions
 
-        equivalence = ''
-        if [typ1, spin1] == [typ2, spin2]:
-            equivalence = '12'
-        if [typ1, spin2] == [typ3, spin3]:
-            equivalence = '13'
-        if [typ2, spin2] == [typ3, spin3]:
-            equivalence = '23'
+def quadruple_contraction(expression):
 
-        for ip, p in enumerate([contr_chars[0].lower(), contr_chars[0].upper()]):
-            for iq, q in enumerate([contr_chars[1].lower(), contr_chars[1].upper()]):
-                for ir, r in enumerate([contr_chars[2].lower(), contr_chars[2].upper()]):
+    typ1 = type_of_index(expression.contracted[0])
+    typ2 = type_of_index(expression.contracted[1])
+    typ3 = type_of_index(expression.contracted[2])
+    typ4 = type_of_index(expression.contracted[3])
+    spin1 = expression.spin_of_contracted[0]
+    spin2 = expression.spin_of_contracted[1]
+    spin3 = expression.spin_of_contracted[2]
+    spin4 = expression.spin_of_contracted[3]
 
-                    weight = ''
+    equivalence = ''
+    if [typ1, spin1] == [typ2, spin2]:
+        equivalence = '12'
+    if [typ1, spin2] == [typ3, spin3]:
+        equivalence = '13'
+    if [typ1, spin1] == [typ4, spin4]:
+        equivalence = '14'
+    if [typ2, spin2] == [typ3, spin3]:
+        equivalence = '23'
+    if [typ2, spin2] == [typ4, spin4]:
+        equivalence = '24'
+    if [typ3, spin3] == [typ4, spin4]:
+        equivalence = '34'
+    if [typ1, spin1] == [typ2, spin2] and [typ3, spin3] == [typ4, spin4]:
+        equivalence = '1234'
+    if [typ1, spin1] == [typ3, spin3] and [typ2, spin2] == [typ4, spin4]:
+        equivalence = '1324'
+    if [typ1, spin1] == [typ4, spin4] and [typ2, spin2] == [typ3, spin3]:
+        equivalence = '1423'
+
+    list_of_expressions = []
+    for idp, p in enumerate([x.lower() for x in expression.contracted[0]] + [x.upper() for x in expression.contracted[0]]):
+        for idq, q in enumerate([x.lower() for x in expression.contracted[1]] + [x.upper() for x in expression.contracted[1]]):
+            for idr, r in enumerate([x.lower() for x in expression.contracted[2]] + [x.upper() for x in expression.contracted[2]]):
+                for ids, s in enumerate([x.lower() for x in expression.contracted[3]] + [x.upper() for x in expression.contracted[3]]):
+
+                    weight = 1.0
+                    sign = expression.sign
 
                     typ1 = type_of_index(p)
                     typ2 = type_of_index(q)
                     typ3 = type_of_index(r)
+                    typ4 = type_of_index(s)
 
                     if equivalence == '12':
-                        if ip < iq: continue
+                        if idp < idq: continue
                     if equivalence == '13':
-                        if ip < ir: continue
+                        if idp < idr: continue
+                    if equivalence == '14':
+                        if idp < ids: continue
                     if equivalence == '23':
-                        if iq < ir: continue
+                        if idq < idr: continue
+                    if equivalence == '24':
+                        if idq < ids: continue
+                    if equivalence == '34':
+                        if idr < ids: continue
+                    if equivalence == '1234':
+                        if idp < idq or idr < ids: continue
+                    if equivalence == '1324':
+                        if idp < idr or idq < ids: continue
+                    if equivalence == '1423':
+                        if idp < ids or idq < idr: continue
 
-                    if [typ1, spin1] == [typ2, spin2] or \
-                            [typ1, spin1] == [typ3, spin3] or \
-                            [typ2, spin2] == [typ3, spin3]:
-                        weight = '0.5'
+                    if [typ1, spin1] == [typ2, spin2]:
+                        weight *= 0.5
+                    if [typ1, spin1] == [typ3, spin3]:
+                        weight *= 0.5
+                    if [typ2, spin2] == [typ3, spin3]:
+                        weight *= 0.5
+                    if [typ1, spin1] == [typ4, spin4]:
+                        weight *= 0.5
+                    if [typ2, spin2] == [typ4, spin4]:
+                        weight *= 0.5
+                    if [typ3, spin3] == [typ4, spin4]:
+                        weight *= 0.5
 
-                    arr1 = list(obj1['chars'])
-                    arr1[obj1['contr_idx'][0]] = p
-                    arr1[obj1['contr_idx'][1]] = q
-                    arr1[obj1['contr_idx'][2]] = r
+                    arr1 = list(expression.A.indices)
+                    arr1[expression.A.contracted_indices[0]] = p
+                    arr1[expression.A.contracted_indices[1]] = q
+                    arr1[expression.A.contracted_indices[2]] = r
+                    arr1[expression.A.contracted_indices[3]] = s
 
-                    arr2 = list(obj2['chars'])
-                    arr2[obj2['contr_idx'][0]] = p
-                    arr2[obj2['contr_idx'][1]] = q
-                    arr2[obj2['contr_idx'][2]] = r
+                    arr2 = list(expression.B.indices)
+                    arr2[expression.B.contracted_indices[0]] = p
+                    arr2[expression.B.contracted_indices[1]] = q
+                    arr2[expression.B.contracted_indices[2]] = r
+                    arr2[expression.B.contracted_indices[3]] = s
 
-                    new_arr, sign2 = fix_t3_indices(arr2, obj2['spin'])
-                    if sign2 in ['', '+']:
-                        sign = sign_orig
-                    else:
-                        if sign_orig in ['', '+']:
-                            sign = '-'
-                        else:
-                            sign = '+'
+                    new_arr, sign_perm = fix_t3_indices(arr2, expression.B.spin)
+                    sign = expression.sign * sign_perm
 
-                    signcoef = sign + weight
-                    term1 = obj1['symbol'] + '(' + ''.join(arr1) + ')'
-                    term2 = obj2['symbol'] + '(' + ''.join(new_arr) + ')'
+                    term1 = Term(expression.A.symbol,
+                                 expression.A.spin,
+                                 ''.join(arr1))
 
-                    d1.append(signcoef + ',' + term1 + ',' + term2)
+                    term2 = Term(expression.B.symbol,
+                                 expression.B.spin,
+                                 ''.join(new_arr))
 
-                    ct += 1
+                    list_of_expressions.append(BinaryExpression(sign, weight, term1, term2))
 
-    if num_contr_inds == 4:
-
-        d1 = []
-        ct = 0
-
-        typ1 = type_of_index(contr_chars[0])
-        typ2 = type_of_index(contr_chars[1])
-        typ3 = type_of_index(contr_chars[2])
-        typ4 = type_of_index(contr_chars[3])
-        spin1 = spin_contr[0]
-        spin2 = spin_contr[1]
-        spin3 = spin_contr[2]
-        spin4 = spin_contr[3]
-
-        equivalence = ''
-        if [typ1, spin1] == [typ2, spin2]:
-            equivalence = '12'
-        if [typ1, spin2] == [typ3, spin3]:
-            equivalence = '13'
-        if [typ1, spin1] == [typ4, spin4]:
-            equivalence = '14'
-        if [typ2, spin2] == [typ3, spin3]:
-            equivalence = '23'
-        if [typ2, spin2] == [typ4, spin4]:
-            equivalence = '24'
-        if [typ3, spin3] == [typ4, spin4]:
-            equivalence = '34'
-        if [typ1, spin1] == [typ2, spin2] and [typ3, spin3] == [typ4, spin4]:
-            equivalence = '1234'
-        if [typ1, spin1] == [typ3, spin3] and [typ2, spin2] == [typ4, spin4]:
-            equivalence = '1324'
-        if [typ1, spin1] == [typ4, spin4] and [typ2, spin2] == [typ3, spin3]:
-            equivalence = '1423'
-
-        for idp, p in enumerate([contr_chars[0].lower(), contr_chars[0].upper()]):
-            for idq, q in enumerate([contr_chars[1].lower(), contr_chars[1].upper()]):
-                for idr, r in enumerate([contr_chars[2].lower(), contr_chars[2].upper()]):
-                    for ids, s in enumerate([contr_chars[3].lower(), contr_chars[3].upper()]):
-
-                        weight = ''
-
-                        typ1 = type_of_index(p)
-                        typ2 = type_of_index(q)
-                        typ3 = type_of_index(r)
-                        typ4 = type_of_index(s)
-
-                        if equivalence == '12':
-                            if idp < idq: continue
-                        if equivalence == '13':
-                            if idp < idr: continue
-                        if equivalence == '14':
-                            if idp < ids: continue
-                        if equivalence == '23':
-                            if idq < idr: continue
-                        if equivalence == '24':
-                            if idq < ids: continue
-                        if equivalence == '34':
-                            if idr < ids: continue
-                        if equivalence == '1234':
-                            if idp < idq or idr < ids: continue
-                        if equivalence == '1324':
-                            if idp < idr or idq < ids: continue
-                        if equivalence == '1423':
-                            if idp < ids or idq < idr: continue
-
-                        weightnum = 1.0
-                        if [typ1, spin1] == [typ2, spin2]:
-                            weightnum *= 0.5
-                        if [typ1, spin1] == [typ3, spin3]:
-                            weightnum *= 0.5
-                        if [typ2, spin2] == [typ3, spin3]:
-                            weightnum *= 0.5
-                        if [typ1, spin1] == [typ4, spin4]:
-                            weightnum *= 0.5
-                        if [typ2, spin2] == [typ4, spin4]:
-                            weightnum *= 0.5
-                        if [typ3, spin3] == [typ4, spin4]:
-                            weightnum *= 0.5
-                        if weightnum == 1.0:
-                            weight = ''
-                        else:
-                            weight = str(weightnum)
-
-                        arr1 = list(obj1['chars'])
-                        arr1[obj1['contr_idx'][0]] = p
-                        arr1[obj1['contr_idx'][1]] = q
-                        arr1[obj1['contr_idx'][2]] = r
-                        arr1[obj1['contr_idx'][3]] = s
-
-                        arr2 = list(obj2['chars'])
-                        arr2[obj2['contr_idx'][0]] = p
-                        arr2[obj2['contr_idx'][1]] = q
-                        arr2[obj2['contr_idx'][2]] = r
-                        arr2[obj2['contr_idx'][3]] = s
-
-                        new_arr, sign2 = fix_t3_indices(arr2, obj2['spin'])
-                        if sign2 in ['', '+']:
-                            sign = sign_orig
-                        else:
-                            if sign_orig in ['', '+']:
-                                sign = '-'
-                            else:
-                                sign = '+'
-
-                        coef = sign + weight
-                        term1 = obj1['symbol'] + '(' + ''.join(arr1) + ')'
-                        term2 = obj2['symbol'] + '(' + ''.join(new_arr) + ')'
-
-                        d1.append(coef + ',' + term1 + ',' + term2)
-
-                        ct += 1
-    return d1
-
-def single_contraction(expression):
-
-    for ip, p in enumerate([expression.contracted.lower(), contr_chars[0].upper()]):
-
-        weight = ''
-
-        arr1 = list(obj1['chars'])
-        arr1[obj1['contr_idx'][0]] = p
-        arr2 = list(obj2['chars'])
-        arr2[obj2['contr_idx'][0]] = p
-
-        new_arr, sign2 = fix_t3_indices(arr2, obj2['spin'])
-        if sign2 in ['', '+']:
-            sign = sign_orig
-        else:
-            if sign_orig in ['', '+']:
-                sign = '-'
-            else:
-                sign = '+'
-
-
-
-        signcoef = sign + weight
-        term1 = obj1['symbol'] + '(' + ''.join(arr1) + ')'
-        term2 = obj2['symbol'] + '(' + ''.join(new_arr) + ')'
-
-        d1.append(signcoef + ',' + term1 + ',' + term2)
-
+    return list_of_expressions

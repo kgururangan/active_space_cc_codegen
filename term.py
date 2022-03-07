@@ -26,6 +26,8 @@ class BinaryExpression:
         setattr(self.A, 'contracted_indices', temp_A)
         setattr(self.B, 'contracted_indices', temp_B)
 
+        self.spin_of_contracted = [self.A.spin_of_index(i) for i in self.A.contracted_indices]
+
     def to_string(self):
         return ''.join([sign_to_str(self.sign), str(self.weight), ',', self.A.to_index_string(), ',', self.B.to_index_string()])
 

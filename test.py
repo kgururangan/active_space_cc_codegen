@@ -1,5 +1,6 @@
 from term import Term, BinaryExpression
 from diagramperms import generate_active_permutations
+from contraction import contract
 
 def main(projection):
     #
@@ -15,13 +16,18 @@ def main(projection):
     #                    '+h2B(AmIe),t3b(BCeJKm)']
 
     # -h1A(mI) * t3A(ABCmJK)
-    term_1 = Term('H', 'a', 'mi')
-    term_2 = Term('T', 'aaa', 'ABCmJK')
-    expression = BinaryExpression(-1.0, 1.0, term_1, term_2)
+    term_1 = Term('H', 'aa', 'mnef')
+    term_2 = Term('T', 'aaa', 'efAmnI')
+    expression = BinaryExpression(1.0, 1.0, term_1, term_2)
+
+
 
     new_expressions = generate_active_permutations(expression, 'aaa', verbose=False)
 
-    for expr in new_expressions:
+    y = contract(expression)
+
+
+    for expr in y:
         print(expr.to_string())
 
 
