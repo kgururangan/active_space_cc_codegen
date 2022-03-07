@@ -5,23 +5,10 @@ from contraction import binary_active_contraction
 from indices import check_include_term, convert_char_to_ov, get_slicestr_t3
 
 
-def write_HBarT3_contractions(expr_list, out_proj, out_proj_spin, nact_scheme=1, print_term=False):
+def write_HBarT3_contractions(expr_list, out_proj, out_proj_spin, weight0, residual_term, nact_scheme=1):
 
     num_expr = len(expr_list)
     D = [None] * num_expr
-
-    if out_proj_spin == 'A':
-        weight0 = 36.0
-        residual_term = 'dT.aaa.'
-    if out_proj_spin == 'B':
-        weight0 = 4.0
-        residual_term = 'dT.aab.'
-    if out_proj_spin == 'C':
-        weight0 = 4.0
-        residual_term = 'dT.abb.'
-    if out_proj_spin == 'D':
-        weight0 = 36.0
-        residual_term = 'dT.bbb.'
 
     for inm, op in enumerate(out_proj):
         if op.upper() == op:
@@ -91,20 +78,29 @@ def write_HBarT3_contractions(expr_list, out_proj, out_proj_spin, nact_scheme=1,
                 slicestr = ''
                 actslicestr = ''
                 for ind, c in enumerate(contr1):
+
+
+
                     o_or_v = convert_char_to_ov(c)
                     slicestr += o_or_v
-                    if c.upper() == c:
-                        if o_or_v == 'o':
-                            c1 = 'O'
-                        if o_or_v == 'v':
-                            c1 = 'V'
-                    if c.upper() != c:
-                        if o_or_v == 'o':
-                            c1 = 'o'
-                        if o_or_v == 'v':
-                            c1 = 'v'
 
-                    actslicestr += c1 + double_spin_string[ind] + ','
+                    # check if string on term1 corresponds to a free index (line extending to right)
+                    # also present in the output string. If so, can simply use entire occ/unocc manifold.
+                    if c in ['e', 'f', 'm', 'n', 'E', 'F', 'M', 'N'] and c in out_proj:
+                        actslicestr += ':,'
+                    else:
+                        if c.upper() == c:
+                            if o_or_v == 'o':
+                                c1 = 'O'
+                            if o_or_v == 'v':
+                                c1 = 'V'
+                        if c.upper() != c:
+                            if o_or_v == 'o':
+                                c1 = 'o'
+                            if o_or_v == 'v':
+                                c1 = 'v'
+
+                        actslicestr += c1 + double_spin_string[ind] + ','
 
                 s2 = s[2].split('(')
                 term2 = s2[0]

@@ -4,6 +4,8 @@ from utilities import change_term_to_projection
 def main(projection):
 
     out_proj_spin = 'A'
+    weight0 = 36.0
+    residual_term = 'dT.aaa'
 
     all_active_expr = ['-h1A(mI),t3A(ABCmJK)',
                        '+h1A(Ae),t3a(eBCIJK)',
@@ -29,7 +31,7 @@ def main(projection):
 
     print(input_expr)
 
-    HBarT3_out, nterms = write_HBarT3_contractions(input_expr, projection, out_proj_spin, print_term=False)
+    HBarT3_out, nterms = write_HBarT3_contractions(input_expr, projection, out_proj_spin, weight0, residual_term)
     print('# of terms = ', nterms)
 
 
