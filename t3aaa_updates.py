@@ -5,7 +5,7 @@ def main(projection):
 
     out_proj_spin = 'A'
     weight0 = 36.0
-    residual_term = 'dT.aaa'
+    residual_term = 'dT.aaa.'
 
     all_active_expr = ['-h1A(mI),t3A(ABCmJK)',
                        '+h1A(Ae),t3a(eBCIJK)',

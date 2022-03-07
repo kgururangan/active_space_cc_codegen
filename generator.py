@@ -2,7 +2,7 @@ from diagramperms import generate_active_permutations
 from weights import get_permutation_weight
 from parser import parse_expression
 from contraction import binary_active_contraction
-from indices import check_include_term, convert_char_to_ov, get_slicestr_t3
+from indices import check_include_term, convert_char_to_ov, get_slicestr_t3, type_of_index, is_free_index
 
 
 def write_HBarT3_contractions(expr_list, out_proj, out_proj_spin, weight0, residual_term, nact_scheme=1):
@@ -11,16 +11,27 @@ def write_HBarT3_contractions(expr_list, out_proj, out_proj_spin, weight0, resid
     D = [None] * num_expr
 
     for inm, op in enumerate(out_proj):
-        if op.upper() == op:
-            if inm < 3:
-                residual_term += 'V'
-            else:
-                residual_term += 'O'
-        if op.upper() != op:
-            if inm < 3:
-                residual_term += 'v'
-            else:
-                residual_term += 'o'
+        if type_of_index(op) == 'active_hole':
+            #if is_free_index(op):
+            #    residual_term += 'h'
+            #else:
+            residual_term += 'O'
+        if type_of_index(op) == 'active_particle':
+            #if is_free_index(op):
+            #    residual_term += 'p'
+            #else:
+            residual_term += 'V'
+        if type_of_index(op) == 'inactive_hole':
+            #if is_free_index(op):
+            #    residual_term += 'h'
+            #else:
+            residual_term += 'o'
+        if type_of_index(op) == 'inactive_particle':
+            #if is_free_index(op):
+            #    residual_term += 'p'
+            #else:
+            residual_term += 'v'
+
 
     nterms = 0
     for i, expr in enumerate(expr_list):

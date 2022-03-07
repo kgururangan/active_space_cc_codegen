@@ -10,6 +10,16 @@ def is_active(char):
     else:
         return False
 
+def is_free_index(char):
+    if len(char) > 1:
+        char1 = char[0]
+    else:
+        char1 = char
+    if char1 in ['m', 'n', 'o', 'M', 'N', 'O', 'e', 'f', 'g', 'E', 'F', 'G']:
+        return True
+    else:
+        return False
+
 def particle_or_hole(char):
     if len(char) > 1:
         char1 = char[0]
