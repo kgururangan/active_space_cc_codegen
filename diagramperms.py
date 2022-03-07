@@ -101,49 +101,6 @@ def generate_active_permutations(expr, out_proj_spin, verbose=False):
     return list(set(expr_list))
 
 
-def get_counting_dict(contr, spincase):
-    if spincase == 'A':
-        return {'num_virt_alpha': contr.count('a') + contr.count('b') + contr.count('c'),
-                'num_core_alpha': contr.count('i') + contr.count('j') + contr.count('k'),
-                'num_act_hole_alpha': contr.count('I') + contr.count('J') + contr.count('K'),
-                'num_act_particle_alpha': contr.count('A') + contr.count('B') + contr.count('C'),
-                'num_virt_beta': 0,
-                'num_core_beta': 0,
-                'num_act_hole_beta': 0,
-                'num_act_particle_beta': 0
-                }
-    if spincase == 'B':
-        return {'num_virt_alpha': contr.count('a') + contr.count('b'),
-                'num_core_alpha': contr.count('i') + contr.count('j'),
-                'num_act_hole_alpha': contr.count('I') + contr.count('J'),
-                'num_act_particle_alpha': contr.count('A') + contr.count('B'),
-                'num_virt_beta': contr.count('c'),
-                'num_core_beta': contr.count('k'),
-                'num_act_hole_beta': contr.count('K'),
-                'num_act_particle_beta': contr.count('C')
-                }
-    if spincase == 'C':
-        return {'num_virt_alpha': contr.count('a'),
-                'num_core_alpha': contr.count('i'),
-                'num_act_hole_alpha': contr.count('I'),
-                'num_act_particle_alpha': contr.count('A'),
-                'num_virt_beta': contr.count('b') + contr.count('c'),
-                'num_core_beta': contr.count('j') + contr.count('k'),
-                'num_act_hole_beta': contr.count('J') + contr.count('K'),
-                'num_act_particle_beta': contr.count('B') + contr.count('C')
-                }
-    if spincase == 'D':
-        return {'num_virt_beta': contr.count('a') + contr.count('b') + contr.count('c'),
-                'num_core_beta': contr.count('i') + contr.count('j') + contr.count('k'),
-                'num_act_hole_beta': contr.count('I') + contr.count('J') + contr.count('K'),
-                'num_act_particle_beta': contr.count('A') + contr.count('B') + contr.count('C'),
-                'num_virt_alpha': 0,
-                'num_core_alpha': 0,
-                'num_act_hole_alpha': 0,
-                'num_act_particle_alpha': 0
-                }
-
-
 def get_swapping_dict(contr, spincase):
     if spincase == 'A':
         dict_out = {'virt_alpha': [x for x in ['a', 'b', 'c'] if x in contr],

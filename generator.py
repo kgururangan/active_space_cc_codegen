@@ -1,7 +1,9 @@
-from diagramperms import generate_active_permutations, get_counting_dict
+from diagramperms import generate_active_permutations
+from weights import get_permutation_weight
 from parser import parse_expression
 from contraction import binary_active_contraction
 from indices import check_include_term, convert_char_to_ov, get_slicestr_t3
+
 
 def write_HBarT3_contractions(expr_list, out_proj, out_proj_spin, nact_scheme=1, print_term=False):
 
@@ -133,18 +135,7 @@ def write_HBarT3_contractions(expr_list, out_proj, out_proj_spin, nact_scheme=1,
                 )
 
             # find the permutation weight using last contr1 and contr2
-            dict_1 = get_counting_dict(contr1, out_proj_spin)
-            dict_2 = get_counting_dict(contr2, out_proj_spin)
-
-            perm_weight = 1.0
-            for key in dict_1.keys():
-                val1 = dict_1[key]
-                val2 = dict_2[key]
-
-                if val1 == 1 and val2 == 2 or val2 == 1 and val1 == 2:
-                    perm_weight *= 3.0
-                elif val1 == 1 and val2 == 1:
-                    perm_weight *= 2.0
+            perm_weight = get_permutation_weight(contr1, contr2, out_proj_spin)
 
             # print the term
             print(residual_term + ' += (' + str(perm_weight) + '/' + str(weight0) + ') * (')
