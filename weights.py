@@ -1,9 +1,9 @@
 
-def get_permutation_weight(contr1, contr2, spincase):
+def get_permutation_weight(expression):
 
     # find the permutation weight using last contr1 and contr2
-    dict_1 = get_counting_dict(contr1, spincase)
-    dict_2 = get_counting_dict(contr2, spincase)
+    dict_1 = get_counting_dict(expression.A.indices, expression.A.spin)
+    dict_2 = get_counting_dict(expression.B.indices, expression.B.spin)
 
     perm_weight = 1.0
     for key in dict_1.keys():

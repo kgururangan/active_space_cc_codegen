@@ -1,6 +1,7 @@
 from term import Term, BinaryExpression
 from diagramperms import generate_active_permutations
 from contraction import contract
+from generator import active_space_generator
 
 def main(projection):
     #
@@ -16,19 +17,17 @@ def main(projection):
     #                    '+h2B(AmIe),t3b(BCeJKm)']
 
     # -h1A(mI) * t3A(ABCmJK)
-    term_1 = Term('H', 'aa', 'mnef')
-    term_2 = Term('T', 'aaa', 'efAmnI')
+    # +h2A(Amie),t3a(ebcmJK)
+    term_1 = Term('H', 'aa', 'Amie')
+    term_2 = Term('T', 'aaa', 'ebcmJK')
     expression = BinaryExpression(1.0, 1.0, term_1, term_2)
 
+    diagrams, perm_weights = active_space_generator(expression, 'aaa', num_active=1)
 
-
-    new_expressions = generate_active_permutations(expression, 'aaa', verbose=False)
-
-    y = contract(expression)
-
-
-    for expr in y:
-        print(expr.to_string())
+    for unique_diagram, perm_weight in zip(diagrams, perm_weights):
+        print('------------')
+        for expr in unique_diagram:
+            print(perm_weight, expr.to_string())
 
 
 

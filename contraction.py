@@ -8,22 +8,25 @@ def contract(expression, num_active):
 
     if len(expression.contracted) == 1:
         all_contractions = single_contraction(expression)
-    if len(expression.contracted) == 2:
+    elif len(expression.contracted) == 2:
         all_contractions = double_contraction(expression)
-    if len(expression.contracted) == 3:
+    elif len(expression.contracted) == 3:
         all_contractions = triple_contraction(expression)
-    if len(expression.contracted) == 4:
+    elif len(expression.contracted) == 4:
         all_contractions = quadruple_contraction(expression)
+    else:
+        print('Invalid number of contraction indices > 4')
+        return
 
     # retain only those expressions in which T (or R) is restricted to
     # the appropriate active space paritioning
     for expr in all_contractions:
-        if check_include_term(expr.B.indices, nact_scheme):
+        if check_include_term(expr.B.indices, num_active):
             retained_contractions.append(expr)
 
     return retained_contractions
 
-
+# [TODO]: Can collapse all contraction cases into one function using intertools.combinations. Just need to work it out..
 def single_contraction(expression):
 
     list_of_expressions = []
