@@ -36,12 +36,18 @@ class BinaryExpression:
 
 class Term:
 
-    def __init__(self, symbol, spin, indices):
+    def __init__(self, symbol, spin, indices, is_full = None):
 
         self.symbol = symbol.upper()
         self.order = len(spin)
         self.spin = spin
         self.indices = indices
+
+        if is_full is None:
+            self.is_full = [False] * len(indices)
+        else:
+            self.is_full = is_full
+
         self.get_slices()
         self.contracted_indices = None
 
@@ -55,19 +61,31 @@ class Term:
             if index_type == 'active_hole':
                 self.ph_slices.append('o')
                 self.act_ph_slices.append('O')
-                self.act_spin_slices.append(''.join(['O', spin_index]))
+                if self.is_full[i]:
+                    self.act_spin_slices.append(':')
+                else:
+                    self.act_spin_slices.append(''.join(['O', spin_index]))
             if index_type == 'inactive_hole':
                 self.ph_slices.append('o')
                 self.act_ph_slices.append('o')
-                self.act_spin_slices.append(''.join(['o', spin_index]))
+                if self.is_full[i]:
+                    self.act_spin_slices.append(':')
+                else:
+                    self.act_spin_slices.append(''.join(['o', spin_index]))
             if index_type == 'active_particle':
                 self.ph_slices.append('v')
                 self.act_ph_slices.append('V')
-                self.act_spin_slices.append(''.join(['V', spin_index]))
+                if self.is_full[i]:
+                    self.act_spin_slices.append(':')
+                else:
+                    self.act_spin_slices.append(''.join(['V', spin_index]))
             if index_type == 'inactive_particle':
                 self.ph_slices.append('v')
                 self.act_ph_slices.append('v')
-                self.act_spin_slices.append(''.join(['v', spin_index]))
+                if self.is_full[i]:
+                    self.act_spin_slices.append(':')
+                else:
+                    self.act_spin_slices.append(''.join(['v', spin_index]))
 
     def spin_of_index(self, i):
         double_spin_string = self.spin * 2

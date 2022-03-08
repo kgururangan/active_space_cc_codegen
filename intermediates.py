@@ -11,9 +11,10 @@ def vt3a_intermediate(projection):
 
     if projection.lower() == 'amij':
         expressions = [
-                        BinaryExpression(+1.0, 1.0, Term('H', 'aa', 'mnef'), Term('T', 'aaa', 'AefIJn')),
-                        BinaryExpression(+1.0, 1.0, Term('H', 'ab', 'mnef'), Term('T', 'aab', 'AefIJn')),
+                        BinaryExpression(+1.0, 1.0, Term('H', 'aa', 'mnef', is_full=[True,False,False,False]), Term('T', 'aaa', 'AefIJn')),
+                        BinaryExpression(+1.0, 1.0, Term('H', 'ab', 'mnef', is_full=[True,False,False,False]), Term('T', 'aab', 'AefIJn')),
         ]
+
     if projection.lower() == 'abie':
         expressions = [
                         BinaryExpression(-1.0, 1.0, Term('H', 'aa', 'mnef'), Term('T', 'aaa', 'ABfImn')),
@@ -74,6 +75,6 @@ if __name__ == "__main__":
 
     vt3a_intermediate(projection)
 
-    vt3b_intermediate(projection)
+    #vt3b_intermediate(projection)
 
 
