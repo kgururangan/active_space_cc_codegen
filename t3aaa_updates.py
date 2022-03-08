@@ -1,38 +1,30 @@
-from generator import write_HBarT3_contractions
+from generator import Generator
+from term import BinaryExpression, Term
 from utilities import change_term_to_projection
 
 def main(projection):
 
-    out_proj_spin = 'A'
-    weight0 = 36.0
-    residual_term = 'dT.aaa.'
+    g = Generator(projection, 'aaa', 1)
 
-    all_active_expr = ['-h1A(mI),t3A(ABCmJK)',
-                       '+h1A(Ae),t3a(eBCIJK)',
-                       '+h2A(mnIJ),t3a(ABCmnK)',
-                       '+h2A(ABef),t3a(efCIJK)',
-                       '+h2A(AmIe),t3a(eBCmJK)',
-                       '+h2B(AmIe),t3b(BCeJKm)']
+    expressions = [
+        BinaryExpression(-1.0, 1.0, Term('H', 'a', 'mI'), Term('T', 'aaa', 'ABCmJK')),
+        BinaryExpression(+1.0, 1.0, Term('H', 'a', 'Ae'), Term('T', 'aaa', 'eBCIJK')),
+        BinaryExpression(+1.0, 1.0, Term('H', 'aa', 'mnIJ'), Term('T', 'aaa', 'ABCmnK')),
+        BinaryExpression(+1.0, 1.0, Term('H', 'aa', 'ABef'), Term('T', 'aaa', 'efCIJK')),
+        BinaryExpression(+1.0, 1.0, Term('H', 'aa', 'AmIe'), Term('T', 'aaa', 'eBCmJK')),
+        BinaryExpression(+1.0, 1.0, Term('H', 'ab', 'AmIe'), Term('T', 'aab', 'BCeJKm'))
+    ]
 
-    input_expr = []
+    for expression in expressions:
 
-    for expr in all_active_expr:
+        expression.A.indices = change_term_to_projection(expression.A.indices, projection)
+        expression.B.indices = change_term_to_projection(expression.B.indices, projection)
 
-        s = expr.split(',')
-        s1 = s[0].split('(')
-        s2 = s[1].split('(')
+        g.generate(expression)
 
-        contr1 = s1[1][0:-1]
-        contr2 = s2[1][0:-1]
+    g.print_expression()
 
-        term = [s1[0], '(', change_term_to_projection(contr1, projection), '),', s2[0], '(', change_term_to_projection(contr2, projection), ')']
 
-        input_expr.append(''.join(term))
-
-    print(input_expr)
-
-    HBarT3_out, nterms = write_HBarT3_contractions(input_expr, projection, out_proj_spin, weight0, residual_term)
-    print('# of terms = ', nterms)
 
 
 if __name__ == "__main__":
