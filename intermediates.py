@@ -1,83 +1,79 @@
-from utilities import change_term_to_projection
-from generator import write_HBarT3_contractions
+from term import Term, BinaryExpression
+from generator import Generator
+from utilities import change_term_to_projection, get_label_from_projection
 
-def write_vt3a_intermediate(projection):
+def vt3a_intermediate(projection):
 
-    weight0 = 1.0
-    out_proj_spin = 'aa'
-    residual_term = 'I2' + out_proj_spin + '_'
+    weight = 1.0
+    residual_term = 'I2A_' + get_label_from_projection(projection)
+
+    g = Generator(projection, 'aa', 1, full_asym_weight=weight, output_quantity=residual_term)
 
     if projection.lower() == 'amij':
-        all_active_expr = ['+h2a(mnef),t3a(AefIJn)',
-                           '+h2b(mnef),t3b(AefIJn)']
+        expressions = [
+                        BinaryExpression(+1.0, 1.0, Term('H', 'aa', 'mnef'), Term('T', 'aaa', 'AefIJn')),
+                        BinaryExpression(+1.0, 1.0, Term('H', 'ab', 'mnef'), Term('T', 'aab', 'AefIJn')),
+        ]
     if projection.lower() == 'abie':
-        all_active_expr = ['-h2a(mnef),t3a(ABfImn)',
-                           '-h2b(mnef),t3b(ABfImn)']
-    input_expr = []
+        expressions = [
+                        BinaryExpression(-1.0, 1.0, Term('H', 'aa', 'mnef'), Term('T', 'aaa', 'ABfImn')),
+                        BinaryExpression(-1.0, 1.0, Term('H', 'ab', 'mnef'), Term('T', 'aab', 'ABfImn'))
+        ]
 
-    for expr in all_active_expr:
-        s = expr.split(',')
-        s1 = s[0].split('(')
-        s2 = s[1].split('(')
+    for expression in expressions:
 
-        contr1 = s1[1][0:-1]
-        contr2 = s2[1][0:-1]
+        expression.A.indices = change_term_to_projection(expression.A.indices, projection)
+        expression.B.indices = change_term_to_projection(expression.B.indices, projection)
 
-        term = [s1[0], '(', change_term_to_projection(contr1, projection), '),', s2[0], '(',
-                change_term_to_projection(contr2, projection), ')']
+        g.generate(expression)
 
-        input_expr.append(''.join(term))
+    g.print_expression()
 
-    print(input_expr)
+def vt3b_intermediate(projection):
 
-    HBarT3_out, nterms = write_HBarT3_contractions(input_expr, projection, out_proj_spin, weight0, residual_term)
-    print('# of terms = ', nterms)
+    weight = 1.0
+    residual_term = 'I2B_' + get_label_from_projection(projection)
 
-def write_vt3b_intermediate(projection):
-
-    weight0 = 1.0
-    out_proj_spin = 'ab'
-    residual_term = 'I2' + out_proj_spin + '_'
+    g = Generator(projection, 'ab', 1, full_asym_weight=weight, output_quantity=residual_term)
 
     if projection.lower() == 'amij': # vooo
-        all_active_expr = ['+h2b(nmfe),t3b(AfeInJ)',
-                           '+h2c(nmfe),t3c(AfeInJ)']
+        expressions = [
+                       BinaryExpression(+1.0, 1.0, Term('H', 'ab', 'nmfe'), Term('T', 'aab', 'AfeInJ')),
+                       BinaryExpression(+1.0, 1.0, Term('H', 'bb', 'nmfe'), Term('T', 'abb', 'AfeInJ'))
+        ]
     if projection.lower() == 'mbij': # ovoo
-        all_active_expr = ['+h2a(mnef),t3b(efBInJ)',
-                           '+h2b(mnef),t3c(efBInJ)']
+        expressions = [
+                       BinaryExpression(+1.0, 1.0, Term('H', 'aa', 'mnef'), Term('T', 'aab', 'efBInJ')),
+                       BinaryExpression(+1.0, 1.0, Term('H', 'ab', 'mnef'), Term('T', 'abb', 'efBInJ'))
+        ]
     if projection.lower() == 'abej': # vvvo
-        all_active_expr = ['-h2a(mnef),t3b(AfBmnJ)',
-                           '-h2b(mnef),t3c(AfBmnJ)']
+        expressions = [
+                       BinaryExpression(-1.0, 1.0, Term('H', 'aa', 'mnef'), Term('T', 'aab', 'AfBmnJ')),
+                       BinaryExpression(-1.0, 1.0, Term('H', 'ab', 'mnef'), Term('T', 'abb', 'AfBmnJ'))
+        ]
     if projection.lower() == 'abie': # vvov
-        all_active_expr = ['-h2b(nmfe),t3b(AfBImn)',
-                           '-h2c(nmfe),t3c(AfBImn)']
+        expressions = [
+                       BinaryExpression(-1.0, 1.0, Term('H', 'ab', 'nmfe'), Term('T', 'aab', 'AfBImn')),
+                       BinaryExpression(-1.0, 1.0, Term('H', 'bb', 'nmfe'), Term('T', 'abb', 'AfBImn'))
+        ]
 
-    input_expr = []
+    for expression in expressions:
 
-    for expr in all_active_expr:
-        s = expr.split(',')
-        s1 = s[0].split('(')
-        s2 = s[1].split('(')
+        expression.A.indices = change_term_to_projection(expression.A.indices, projection)
+        expression.B.indices = change_term_to_projection(expression.B.indices, projection)
 
-        contr1 = s1[1][0:-1]
-        contr2 = s2[1][0:-1]
+        g.generate(expression)
 
-        term = [s1[0], '(', change_term_to_projection(contr1, projection), '),', s2[0], '(',
-                change_term_to_projection(contr2, projection), ')']
+    g.print_expression()
 
-        input_expr.append(''.join(term))
-
-    print(input_expr)
-
-    HBarT3_out, nterms = write_HBarT3_contractions(input_expr, projection, out_proj_spin, weight0, residual_term)
-    print('# of terms = ', nterms)
 
 
 if __name__ == "__main__":
 
-    projection = 'AmIJ'
+    projection = 'AmiJ'
 
-    #write_vt3a_intermediate(projection)
+    vt3a_intermediate(projection)
 
-    write_vt3b_intermediate('Abej')
+    vt3b_intermediate(projection)
+
 

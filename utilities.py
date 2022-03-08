@@ -47,47 +47,6 @@ def change_term_to_projection(string, reference_string):
 
     return string_out
 
-def convert_spin_representation(symbol_in):
-    """Converts from the spin-integrated representation of operators,
-    such as T3A, T3B, T3C, T3D, and H1A, H1B, H2A, H2B, H2B, etc.
-    into the class-based datastrcture T.aaa.xxxxx etc. used in CCpy."""
-    spin = symbol_in[-1].upper()
-    if '1' in symbol_in:
-        if spin == 'A':
-            return ''.join([symbol_in[0].upper(), '.a'])
-        if spin == 'B':
-            return ''.join([symbol_in[0].upper(), '.b'])
-
-    if '2' in symbol_in:
-        if spin == 'A':
-            return ''.join([symbol_in[0].upper(), '.aa'])
-        if spin == 'B':
-            return ''.join([symbol_in[0].upper(), '.ab'])
-        if spin == 'C':
-            return ''.join([symbol_in[0].upper(), '.bb'])
-
-    if '3' in symbol_in:
-        if spin == 'A':
-            return ''.join([symbol_in[0].upper(), '.aaa'])
-        if spin == 'B':
-            return ''.join([symbol_in[0].upper(), '.aab'])
-        if spin == 'C':
-            return ''.join([symbol_in[0].upper(), '.abb'])
-        if spin == 'D':
-            return ''.join([symbol_in[0].upper(), '.bbb'])
-
-    if '4' in symbol_in:
-        if spin == 'A':
-            return ''.join([symbol_in[0].upper(), '.aaaa'])
-        if spin == 'B':
-            return ''.join([symbol_in[0].upper(), '.aaab'])
-        if spin == 'C':
-            return ''.join([symbol_in[0].upper(), '.aabb'])
-        if spin == 'D':
-            return ''.join([symbol_in[0].upper(), '.abbb'])
-        if spin == 'E':
-            return ''.join([symbol_in[0].upper(), '.bbbb'])
-
 def unique_objects(L):
     L_unique = []
     for i, obj_i in enumerate(L):
@@ -112,3 +71,19 @@ def check_include_term(contr, nact_scheme):
     if num_act_hole >= nact_scheme and num_act_particle >= nact_scheme:
         include_term = True
     return include_term
+
+def get_label_from_projection(projection):
+    label = ''
+    order = len(projection)
+    for i, c in enumerate(projection):
+        if i < order:
+            if c.upper() == c:
+                label += 'V'
+            elif c.lower() == c:
+                label += 'v'
+        else:
+            if c.upper() == c:
+                label += 'H'
+            elif c.lower() == c:
+                label += 'h'
+    return label

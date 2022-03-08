@@ -1,5 +1,12 @@
 from utilities import argsort, signPermutation
 
+index_classification = {
+            'fixed holes' : ['i', 'j', 'k', 'l'],
+            'fixed particles' : ['a', 'b', 'c', 'd'],
+            'free holes' : ['m', 'n', 'o'],
+            'free particles' : ['e', 'f', 'g'],
+}
+
 def is_active(char):
     if len(char) > 1:
         char1 = char[0]
