@@ -2,7 +2,11 @@ from term import Term, BinaryExpression
 from generator import Generator
 from utilities import change_term_to_projection
 
-def main(projection):
+import argparse
+
+def main(args):
+
+    projection = args.projection
 
     g = Generator(projection, 'aab', 1)
 
@@ -36,7 +40,9 @@ def main(projection):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Builds T3_aab CCSDt update for specified projection.")
+    parser.add_argument('projection',
+                        help="String, for example 'AbcIJK', specifying the desired outward line projection.")
+    args = parser.parse_args()
 
-    projection = 'AbcIJK'
-
-    main(projection)
+    main(args)

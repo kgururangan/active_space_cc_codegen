@@ -131,7 +131,7 @@ def get_swapping_dict(contr, spincase):
                     'act_hole_beta': [x for x in ['J', 'K'] if x in contr],
                     'act_particle_beta': [x for x in ['B', 'C'] if x in contr]
                     }
-    if spincase == ['bbb', 'bb', 'b']:
+    if spincase in ['bbb', 'bb', 'b']:
         dict_out = {'virt_beta': [x for x in ['a', 'b', 'c'] if x in contr],
                     'core_beta': [x for x in ['i', 'j', 'k'] if x in contr],
                     'act_hole_beta': [x for x in ['I', 'J', 'K'] if x in contr],
