@@ -1,9 +1,11 @@
 
-def get_permutation_weight(expression):
+def get_permutation_weight(expression, spin_projection):
 
     # find the permutation weight using last contr1 and contr2
-    dict_1 = get_counting_dict(expression.A.indices, expression.A.spin)
-    dict_2 = get_counting_dict(expression.B.indices, expression.B.spin)
+    # dict_1 = get_counting_dict(expression.A.indices, expression.A.spin)
+    # dict_2 = get_counting_dict(expression.B.indices, expression.B.spin)
+    dict_1 = get_counting_dict(expression.A.indices, spin_projection)
+    dict_2 = get_counting_dict(expression.B.indices, spin_projection)
 
     perm_weight = 1.0
     for key in dict_1.keys():
@@ -17,7 +19,7 @@ def get_permutation_weight(expression):
 
     return perm_weight
 
-def get_counting_dict(contr, spincase):
+def get_counting_dict(contr, spincase): # THIS IS WRONG!
     if spincase in ['aaa', 'aa', 'a']:
         return {'num_virt_alpha': contr.count('a') + contr.count('b') + contr.count('c'),
                 'num_core_alpha': contr.count('i') + contr.count('j') + contr.count('k'),

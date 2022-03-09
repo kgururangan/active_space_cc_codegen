@@ -35,7 +35,7 @@ class Generator:
         for expr in unique_expressions:
             # get all possible active-space contractions by splitting the contraction lines into active/inactive
             self.contractions.append(contract(expr, self.num_active))
-            self.permutation_weights.append(get_permutation_weight(expr))
+            self.permutation_weights.append(get_permutation_weight(expr, self.projection_spincase))
 
     def get_output_label(self):
 
@@ -52,6 +52,8 @@ class Generator:
                 self.output_quantity += 'v'
 
     def print_expression(self):
+        # for expressions, perm_weight in zip(self.contractions, self.permutation_weights):
+        #     yield self.expression_to_string(expressions, perm_weight)
         self.number_terms = 0
         for expressions, perm_weight in zip(self.contractions, self.permutation_weights):
             self.expression_to_string(expressions, perm_weight)
@@ -70,6 +72,7 @@ class Generator:
                   + expr.B.to_sliced_string(active_object=True) + ', '
                   + 'optimize=True)')
         print(')')
+
 
     def get_full_asym_weight(self):
         self.full_asym_weight = 1.0
