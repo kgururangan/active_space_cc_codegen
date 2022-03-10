@@ -20,8 +20,8 @@ def main(args):
         BinaryExpression(+1.0, 1.0, Term('H', 'aa', 'ABef'), Term('T', 'aab', 'efCIJK')),
         BinaryExpression(+1.0, 1.0, Term('H', 'ab', 'BCef'), Term('T', 'aab', 'AefIJK')),
         BinaryExpression(+1.0, 1.0, Term('H', 'aa', 'AmIe'), Term('T', 'aab', 'eBCmJK')),
-        BinaryExpression(+1.0, 1.0, Term('H', 'ab', 'AmIe'), Term('T', 'aab', 'eBCJmK')),
-        BinaryExpression(+1.0, 1.0, Term('H', 'ab', 'mCeK'), Term('T', 'aaa', 'eABmIJ')),
+        BinaryExpression(+1.0, 1.0, Term('H', 'ab', 'AmIe'), Term('T', 'abb', 'BeCJmK')),
+        BinaryExpression(+1.0, 1.0, Term('H', 'ab', 'mCeK'), Term('T', 'aaa', 'ABeIJm')),
         BinaryExpression(+1.0, 1.0, Term('H', 'bb', 'CmKe'), Term('T', 'aab', 'ABeIJm')),
         BinaryExpression(-1.0, 1.0, Term('H', 'ab', 'AmeK'), Term('T', 'aab', 'eBCIJm')),
         BinaryExpression(-1.0, 1.0, Term('H', 'ab', 'mCIe'), Term('T', 'aab', 'ABemJK'))
