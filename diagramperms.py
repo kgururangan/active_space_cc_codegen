@@ -86,10 +86,12 @@ def generate_active_permutations(reference_expression, projection_spincase, verb
 
                                     permuted_term_1 = Term(reference_expression.A.symbol,
                                                            reference_expression.A.spin,
-                                                           contr1)
+                                                           contr1,
+                                                           is_full=reference_expression.A.is_full)
                                     permuted_term_2 = Term(reference_expression.B.symbol,
                                                            reference_expression.B.spin,
-                                                           contr2)
+                                                           contr2,
+                                                           is_full=reference_expression.B.is_full)
                                     permuted_expression = BinaryExpression(sign,
                                                                            reference_expression.weight,
                                                                            permuted_term_1,

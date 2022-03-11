@@ -66,8 +66,8 @@ def VT3_ab(projection):
         ]
     if projection.lower() == 'abie': # vvov
         expressions = [
-                       BinaryExpression(-1.0, 1.0, Term('H', 'ab', 'nmfe'), Term('T', 'aab', 'AfBImn')),
-                       BinaryExpression(-1.0, 1.0, Term('H', 'bb', 'nmfe'), Term('T', 'abb', 'AfBImn'))
+                       BinaryExpression(-1.0, 1.0, Term('H', 'ab', 'nmfe'), Term('T', 'aab', 'AfBInm')),
+                       BinaryExpression(-1.0, 1.0, Term('H', 'bb', 'nmfe'), Term('T', 'abb', 'AfBInm'))
         ]
 
     for expression in expressions:

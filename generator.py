@@ -7,10 +7,22 @@ from math import factorial
 
 class Generator:
 
-    def __init__(self, projection, projection_spincase, num_active, output_quantity=None, full_asym_weight=None):
+    def __init__(self, projection, projection_spincase, num_active,
+                 output_quantity=None, full_asym_weight=None, active_contract=True,
+                 active_obj_A=False, active_obj_B=True,
+                 print_ph_slices_A=True, print_ph_slices_B=True):
+
+        # overall projection (e.g., ABCIJK, ABcIJK, etc.)
         self.projection = projection
+        # projection spincase (aaa, aab, abb, bbb, aa, ab, bb, a, b)
         self.projection_spincase = projection_spincase
+        # number of active
         self.num_active = num_active
+        self.active_contract = active_contract
+        self.active_obj_A = active_obj_A
+        self.active_obj_B = active_obj_B
+        self.use_ph_slicing_A = print_ph_slices_A
+        self.use_ph_slicing_B = print_ph_slices_B
         self.contractions = []
         self.permutation_weights = []
 
@@ -22,7 +34,7 @@ class Generator:
             self.full_asym_weight = full_asym_weight
 
         if output_quantity is None:
-            self.get_output_label()
+            self.get_default_output_label()
         else:
             self.output_quantity = output_quantity
 
@@ -33,12 +45,17 @@ class Generator:
 
         # loop over uniquely permuted diagrams
         for expr in unique_expressions:
-            print(expr.to_string())
-            # get all possible active-space contractions by splitting the contraction lines into active/inactive
-            self.contractions.append(contract(expr, self.num_active))
+
+            #print(expr.to_string())    # uncomment to print the unique diagram terms
+
+            if self.active_contract:
+                # get all possible active-space contractions by splitting the contraction lines into active/inactive
+                self.contractions.append(contract(expr, self.num_active))
+            else:
+                self.contractions.append([expr])
             self.permutation_weights.append(get_permutation_weight(expr, self.projection_spincase))
 
-    def get_output_label(self):
+    def get_default_output_label(self):
 
         self.output_quantity = 'dT.' + self.projection_spincase + '.'
 
@@ -69,8 +86,8 @@ class Generator:
         for expr in expressions:
             print('        ' + sign_to_str(expr.sign) + str(expr.weight) + '*'
                   + 'np.einsum(' + "'" + expr.A.indices + ',' +  expr.B.indices + '->' + self.projection + "'" + ', '
-                  + expr.A.to_sliced_string(active_object=False) + ', '
-                  + expr.B.to_sliced_string(active_object=True) + ', '
+                  + expr.A.to_sliced_string(active_object=self.active_obj_A, use_ph_slices=self.use_ph_slicing_A) + ', '
+                  + expr.B.to_sliced_string(active_object=self.active_obj_B, use_ph_slices=self.use_ph_slicing_B) + ', '
                   + 'optimize=True)')
         print(')')
 
@@ -101,8 +118,8 @@ class Generator:
                 n_act += 1
             if h.lower() in self.projection:
                 n_inact += 1
-        if n_act > 0: self.full_asym_weight *= factorial(n_act)
-        if n_inact > 0: self.full_asym_weight *= factorial(n_inact)
+        self.full_asym_weight *= factorial(n_act)
+        self.full_asym_weight *= factorial(n_inact)
 
         n_act = 0
         n_inact = 0
@@ -111,8 +128,8 @@ class Generator:
                 n_act += 1
             if p.lower() in self.projection:
                 n_inact += 1
-        if n_act > 0: self.full_asym_weight *= factorial(n_act)
-        if n_inact > 0: self.full_asym_weight *= factorial(n_inact)
+        self.full_asym_weight *= factorial(n_act)
+        self.full_asym_weight *= factorial(n_inact)
 
         n_act = 0
         n_inact = 0
@@ -121,8 +138,8 @@ class Generator:
                 n_act += 1
             if h.lower() in self.projection:
                 n_inact += 1
-        if n_act > 0: self.full_asym_weight *= factorial(n_act)
-        if n_inact > 0: self.full_asym_weight *= factorial(n_inact)
+        self.full_asym_weight *= factorial(n_act)
+        self.full_asym_weight *= factorial(n_inact)
 
         n_act = 0
         n_inact = 0
@@ -131,5 +148,5 @@ class Generator:
                 n_act += 1
             if p.lower() in self.projection:
                 n_inact += 1
-        if n_act > 0: self.full_asym_weight *= factorial(n_act)
-        if n_inact > 0: self.full_asym_weight *= factorial(n_inact)
+        self.full_asym_weight *= factorial(n_act)
+        self.full_asym_weight *= factorial(n_inact)

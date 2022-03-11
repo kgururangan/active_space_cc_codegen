@@ -21,7 +21,10 @@ def contract(expression, num_active):
     # retain only those expressions in which T (or R) is restricted to
     # the appropriate active space paritioning
     for expr in all_contractions:
-        if check_include_term(expr.B.indices, num_active):
+        if len(expr.B.indices) == 6:
+            if check_include_term(expr.B.indices, num_active):
+                retained_contractions.append(expr)
+        else:
             retained_contractions.append(expr)
 
     return retained_contractions
@@ -40,8 +43,13 @@ def single_contraction(expression):
         arr2 = list(expression.B.indices)
         arr2[expression.B.contracted_indices[0]] = p
 
-        new_arr, sign_perm = fix_t3_indices(arr2, expression.B.spin)
-        sign = expression.sign * sign_perm
+        if len(arr2) == 6:
+            new_arr, sign_perm = fix_t3_indices(arr2, expression.B.spin)
+            sign = expression.sign * sign_perm
+        else:
+            new_arr = arr2
+            sign = expression.sign
+
 
         term1 = Term(expression.A.symbol,
                      expression.A.spin,
@@ -51,6 +59,7 @@ def single_contraction(expression):
                      expression.B.spin,
                      ''.join(new_arr))
 
+        #print(BinaryExpression(sign, expression.weight, term1, term2).to_string())
         list_of_expressions.append(BinaryExpression(sign, expression.weight, term1, term2))
 
     return list_of_expressions

@@ -94,14 +94,24 @@ class Term:
     def to_index_string(self):
         return ''.join([self.symbol, '.', self.spin, '(', self.indices, ')'])
 
-    def to_sliced_string(self, active_object=True):
-        if not active_object:
-            slices = ''
-            for sl in self.act_spin_slices:
-                slices += str(sl) + ',' + ' '
-            return ''.join([self.symbol, '.', self.spin, '.', ''.join(self.ph_slices), '[', slices[:-2], ']'])
+    def to_sliced_string(self, active_object=True, use_ph_slices=True):
+
+        if use_ph_slices:
+            if not active_object:
+                slices = ''
+                for sl in self.act_spin_slices:
+                    slices += str(sl) + ',' + ' '
+                return ''.join([self.symbol, '.', self.spin, '.', ''.join(self.ph_slices), '[', slices[:-2], ']'])
+            else:
+                return ''.join([self.symbol, '.', self.spin, '.', ''.join(self.act_ph_slices)])
         else:
-            return ''.join([self.symbol, '.', self.spin, '.', ''.join(self.act_ph_slices)])
+            if not active_object:
+                slices = ''
+                for sl in self.act_spin_slices:
+                    slices += str(sl) + ',' + ' '
+                return ''.join([self.symbol, '.', self.spin, '[', slices[:-2], ']'])
+            else:
+                return ''.join([self.symbol, '.', self.spin, ''.join(self.act_ph_slices)])
 
     def __eq__(self, other) :
         return self.__dict__ == other.__dict__
