@@ -17,15 +17,14 @@ def main(args):
 
 def VT3_aa(projection):
 
-    weight = 1.0
     residual_term = 'I2A_' + get_label_from_projection(projection)
 
-    g = Generator(projection, 'aa', 1, full_asym_weight=weight, output_quantity=residual_term)
+    g = Generator(projection, 'aa', 1, full_asym_weight=1.0, output_quantity=residual_term)
 
     if projection.lower() == 'amij':
         expressions = [
-                        BinaryExpression(+1.0, 1.0, Term('H', 'aa', 'mnef', is_full=[True,False,False,False]), Term('T', 'aaa', 'AefIJn')),
-                        BinaryExpression(+1.0, 1.0, Term('H', 'ab', 'mnef', is_full=[True,False,False,False]), Term('T', 'aab', 'AefIJn')),
+                        BinaryExpression(+1.0, 1.0, Term('H', 'aa', 'mnef'), Term('T', 'aaa', 'AefIJn')),
+                        BinaryExpression(+1.0, 1.0, Term('H', 'ab', 'mnef'), Term('T', 'aab', 'AefIJn')),
         ]
 
     if projection.lower() == 'abie':

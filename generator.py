@@ -33,6 +33,7 @@ class Generator:
 
         # loop over uniquely permuted diagrams
         for expr in unique_expressions:
+            print(expr.to_string())
             # get all possible active-space contractions by splitting the contraction lines into active/inactive
             self.contractions.append(contract(expr, self.num_active))
             self.permutation_weights.append(get_permutation_weight(expr, self.projection_spincase))

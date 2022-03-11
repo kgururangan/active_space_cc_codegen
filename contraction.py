@@ -33,7 +33,6 @@ def single_contraction(expression):
     for ip, p in enumerate([x.lower() for x in expression.contracted] + [x.upper() for x in expression.contracted]):
 
         weight = 1.0
-        sign = expression.sign
 
         arr1 = list(expression.A.indices)
         arr1[expression.A.contracted_indices[0]] = p
@@ -117,7 +116,7 @@ def triple_contraction(expression):
     equivalence = ''
     if [typ1, spin1] == [typ2, spin2]:
         equivalence = '12'
-    if [typ1, spin2] == [typ3, spin3]:
+    if [typ1, spin1] == [typ3, spin3]:
         equivalence = '13'
     if [typ2, spin2] == [typ3, spin3]:
         equivalence = '23'
@@ -128,7 +127,6 @@ def triple_contraction(expression):
             for ir, r in enumerate([x.lower() for x in expression.contracted[2]] + [x.upper() for x in expression.contracted[2]]):
 
                 weight = 1.0
-                sign = expression.sign
 
                 typ1 = type_of_index(p)
                 typ2 = type_of_index(q)
@@ -185,7 +183,7 @@ def quadruple_contraction(expression):
     equivalence = ''
     if [typ1, spin1] == [typ2, spin2]:
         equivalence = '12'
-    if [typ1, spin2] == [typ3, spin3]:
+    if [typ1, spin1] == [typ3, spin3]:
         equivalence = '13'
     if [typ1, spin1] == [typ4, spin4]:
         equivalence = '14'
@@ -209,7 +207,6 @@ def quadruple_contraction(expression):
                 for ids, s in enumerate([x.lower() for x in expression.contracted[3]] + [x.upper() for x in expression.contracted[3]]):
 
                     weight = 1.0
-                    sign = expression.sign
 
                     typ1 = type_of_index(p)
                     typ2 = type_of_index(q)

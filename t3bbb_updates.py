@@ -7,15 +7,15 @@ import argparse
 def main(args):
     projection = args.projection
 
-    g = Generator(projection, 'aaa', 1)
+    g = Generator(projection, 'bbb', 1)
 
     expressions = [
-        BinaryExpression(-1.0, 1.0, Term('H', 'a', 'mI'), Term('T', 'aaa', 'ABCmJK')),
-        BinaryExpression(+1.0, 1.0, Term('H', 'a', 'Ae'), Term('T', 'aaa', 'eBCIJK')),
-        BinaryExpression(+1.0, 1.0, Term('H', 'aa', 'mnIJ'), Term('T', 'aaa', 'ABCmnK')),
-        BinaryExpression(+1.0, 1.0, Term('H', 'aa', 'ABef'), Term('T', 'aaa', 'efCIJK')),
-        BinaryExpression(+1.0, 1.0, Term('H', 'aa', 'AmIe'), Term('T', 'aaa', 'eBCmJK')),
-        BinaryExpression(+1.0, 1.0, Term('H', 'ab', 'AmIe'), Term('T', 'aab', 'BCeJKm'))
+        BinaryExpression(-1.0, 1.0, Term('H', 'b', 'mI'), Term('T', 'bbb', 'ABCmJK')),
+        BinaryExpression(+1.0, 1.0, Term('H', 'b', 'Ae'), Term('T', 'bbb', 'eBCIJK')),
+        BinaryExpression(+1.0, 1.0, Term('H', 'bb', 'mnIJ'), Term('T', 'bbb', 'ABCmnK')),
+        BinaryExpression(+1.0, 1.0, Term('H', 'bb', 'ABef'), Term('T', 'bbb', 'efCIJK')),
+        BinaryExpression(+1.0, 1.0, Term('H', 'bb', 'AmIe'), Term('T', 'bbb', 'eBCmJK')),
+        BinaryExpression(+1.0, 1.0, Term('H', 'ab', 'mAeI'), Term('T', 'abb', 'eBCmJK'))
     ]
 
     for expression in expressions:
@@ -30,7 +30,7 @@ def main(args):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Builds T3_aaa CCSDt update for specified projection.")
+    parser = argparse.ArgumentParser(description="Builds T3_bbb CCSDt update for specified projection.")
     parser.add_argument('projection', type=str, help="String, for example 'AbcIJK', specifying the desired outward line projection.")
     #parser.add_argument('--n', '-number', type=str, help='Numerical representation of active/inactive indices defining projection, e.g., 111011.')
     args = parser.parse_args()

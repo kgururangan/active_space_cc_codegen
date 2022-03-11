@@ -76,14 +76,24 @@ def get_label_from_projection(projection):
     label = ''
     order = len(projection)
     for i, c in enumerate(projection):
-        if i < order:
+        if c.lower() in ['a', 'b', 'c', 'l', 'e', 'f', 'g']:
             if c.upper() == c:
                 label += 'V'
             elif c.lower() == c:
                 label += 'v'
-        else:
+        if c.lower() in ['i', 'j', 'k', 'l', 'm', 'n', 'o']:
             if c.upper() == c:
-                label += 'H'
+                label += 'O'
             elif c.lower() == c:
-                label += 'h'
+                label += 'o'
     return label
+
+def numbers_to_active_string(num_string):
+    string = 'ABCIJK'
+    new_string = ''
+    for i, s in enumerate(string):
+        if num_string[i] == '1':
+            new_string += s.upper()
+        if num_string[i] == '0':
+            new_string += s.lower()
+    return new_string
