@@ -12,11 +12,11 @@ def main(args):
     if args.spincase == 'aab':
         moments_aab(args.projection)
 
-    # if args.spincase == 'abb':
-    #     moments_abb(args.projection)
-    #
-    # if args.spincase == 'bbb':
-    #     moments_bbb(args.projection)
+    if args.spincase == 'abb':
+        moments_abb(args.projection)
+
+    if args.spincase == 'bbb':
+        moments_bbb(args.projection)
 
 def moments_aaa(projection):
 
@@ -63,6 +63,59 @@ def moments_aab(projection):
 
     g.print_expression()
 
+def moments_abb(projection):
+
+    g = Generator(projection, 'abb', 0,
+                  active_contract=False,
+                  active_obj_A=False, active_obj_B=False,
+                  print_ph_slices_A=True, print_ph_slices_B=False)
+
+    expressions = [
+        BinaryExpression(+1.0, 1.0, Term('H', 'ab', 'ABIe', is_full=[False, False, False, True]),
+                         Term('T', 'bb', 'eCJK', is_full=[True,False,False,False])),
+        BinaryExpression(-1.0, 1.0, Term('H', 'ab', 'AmIJ', is_full=[False, True, False, False]),
+                         Term('T', 'bb', 'BCmK', is_full=[False, False, True, False])),
+        BinaryExpression(+1.0, 1.0, Term('H', 'bb', 'CBKe', is_full=[False, False, False, True]),
+                         Term('T', 'ab', 'AeIJ', is_full=[False, True, False, False])),
+        BinaryExpression(-1.0, 1.0, Term('H', 'bb', 'CmKJ', is_full=[False, True, False, False]),
+                         Term('T', 'ab', 'ABIm', is_full=[False, False, False, True])),
+        BinaryExpression(+1.0, 1.0, Term('H', 'ab', 'ABeJ', is_full=[False, False, True, False]),
+                         Term('T', 'ab', 'eCIK', is_full=[True, False, False, False])),
+        BinaryExpression(-1.0, 1.0, Term('H', 'ab', 'mBIJ', is_full=[True, False, False, False]),
+                         Term('T', 'ab', 'ACmK', is_full=[False, False, True, False])),
+    ]
+
+    for expression in expressions:
+        expression.A.indices = change_term_to_projection(expression.A.indices, projection)
+        expression.B.indices = change_term_to_projection(expression.B.indices, projection)
+
+        g.generate(expression)
+
+    g.print_expression()
+
+
+def moments_bbb(projection):
+
+    g = Generator(projection, 'bbb', 0,
+                  active_contract=False,
+                  active_obj_A=False, active_obj_B=False,
+                  print_ph_slices_A=True, print_ph_slices_B=False)
+
+    expressions = [
+        BinaryExpression(-1.0, 1.0, Term('H', 'bb', 'AmIJ', is_full=[False, True, False, False]),
+                         Term('T', 'bb', 'BCmK', is_full=[False, False, True, False])),
+        BinaryExpression(+1.0, 1.0, Term('H', 'bb', 'ABIe', is_full=[False, False, False, True]),
+                         Term('T', 'bb', 'eCJK', is_full=[True, False, False, False])),
+    ]
+
+    for expression in expressions:
+
+        expression.A.indices = change_term_to_projection(expression.A.indices, projection)
+        expression.B.indices = change_term_to_projection(expression.B.indices, projection)
+
+        g.generate(expression)
+
+    g.print_expression()
 
 if __name__ == "__main__":
 
