@@ -10,7 +10,8 @@ class Generator:
     def __init__(self, projection, projection_spincase, num_active,
                  output_quantity=None, full_asym_weight=None, active_contract=True,
                  active_obj_A=False, active_obj_B=True,
-                 print_ph_slices_A=True, print_ph_slices_B=True):
+                 print_ph_slices_A=True, print_ph_slices_B=True,
+                 active_output_quantity=True):
 
         # overall projection (e.g., ABCIJK, ABcIJK, etc.)
         self.projection = projection
@@ -21,6 +22,7 @@ class Generator:
         self.active_contract = active_contract
         self.active_obj_A = active_obj_A
         self.active_obj_B = active_obj_B
+        self.active_output_quantity=active_output_quantity
         self.use_ph_slicing_A = print_ph_slices_A
         self.use_ph_slicing_B = print_ph_slices_B
         self.contractions = []
@@ -57,17 +59,34 @@ class Generator:
 
     def get_default_output_label(self):
 
-        self.output_quantity = 'dT.' + self.projection_spincase + '.'
+        self.output_quantity = 'dT.' + self.projection_spincase
 
-        for inm, op in enumerate(self.projection):
-            if type_of_index(op) == 'active_hole':
-                self.output_quantity += 'O'
-            if type_of_index(op) == 'active_particle':
-                self.output_quantity += 'V'
-            if type_of_index(op) == 'inactive_hole':
-                self.output_quantity += 'o'
-            if type_of_index(op) == 'inactive_particle':
-                self.output_quantity += 'v'
+        if self.active_output_quantity:
+            self.output_quantity += '.'
+            for inm, op in enumerate(self.projection):
+                if type_of_index(op) == 'active_hole':
+                    self.output_quantity += 'O'
+                if type_of_index(op) == 'active_particle':
+                    self.output_quantity += 'V'
+                if type_of_index(op) == 'inactive_hole':
+                    self.output_quantity += 'o'
+                if type_of_index(op) == 'inactive_particle':
+                    self.output_quantity += 'v'
+        else:
+            slices = []
+            double_spin_string = self.projection_spincase * 2
+            for inm, op in enumerate(self.projection):
+                if type_of_index(op) == 'active_hole':
+                    slices.append( ''.join( ['O', double_spin_string[inm]] ) )
+                if type_of_index(op) == 'active_particle':
+                    slices.append( ''.join( ['V', double_spin_string[inm]] ) )
+                if type_of_index(op) == 'inactive_hole':
+                    slices.append( ''.join( ['o', double_spin_string[inm]] ) )
+                if type_of_index(op) == 'inactive_particle':
+                    slices.append( ''.join( ['v', double_spin_string[inm]] ) )
+            self.output_quantity += '[' + ', '.join(slices) + ']'
+
+
 
     def print_expression(self):
         # for expressions, perm_weight in zip(self.contractions, self.permutation_weights):
