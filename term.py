@@ -111,7 +111,7 @@ class Term:
                     slices += str(sl) + ',' + ' '
                 return ''.join([self.symbol, '.', self.spin, '[', slices[:-2], ']'])
             else:
-                return ''.join([self.symbol, '.', self.spin, ''.join(self.act_ph_slices)])
+                return ''.join([self.symbol, '.', self.spin, '.', ''.join(self.act_ph_slices)])
 
     def __eq__(self, other) :
         return self.__dict__ == other.__dict__

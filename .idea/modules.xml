@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/active_space_cc_codegen.iml" filepath="$PROJECT_DIR$/.idea/active_space_cc_codegen.iml" />
+      <module fileurl="file://$USER_HOME$/Documents/Python/ccpy/.idea/ccpy.iml" filepath="$USER_HOME$/Documents/Python/ccpy/.idea/ccpy.iml" />
     </modules>
   </component>
 </project>

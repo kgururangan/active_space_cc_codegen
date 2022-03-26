@@ -8,7 +8,7 @@ from math import factorial
 class Generator:
 
     def __init__(self, projection, projection_spincase, num_active,
-                 output_quantity=None, full_asym_weight=None, active_contract=True,
+                 output_quantity=None, output_label='dT', full_asym_weight=None, active_contract=True,
                  active_obj_A=False, active_obj_B=True,
                  print_ph_slices_A=True, print_ph_slices_B=True,
                  active_output_quantity=True):
@@ -36,7 +36,7 @@ class Generator:
             self.full_asym_weight = full_asym_weight
 
         if output_quantity is None:
-            self.get_default_output_label()
+            self.get_default_output_label(output_label)
         else:
             self.output_quantity = output_quantity
 
@@ -57,9 +57,9 @@ class Generator:
                 self.contractions.append([expr])
             self.permutation_weights.append(get_permutation_weight(expr, self.projection_spincase))
 
-    def get_default_output_label(self):
+    def get_default_output_label(self, label):
 
-        self.output_quantity = 'dT.' + self.projection_spincase
+        self.output_quantity = label+'.' + self.projection_spincase
 
         if self.active_output_quantity:
             self.output_quantity += '.'

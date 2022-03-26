@@ -62,6 +62,10 @@ def get_antisymmetrizer_combinations(projection, spincase):
     active_particles_beta = [i for i, p in enumerate(particles) if p == '1' and double_spin_string[i] == 'b']
     inactive_particles_beta = [i for i, p in enumerate(particles) if p == '0' and double_spin_string[i] == 'b']
 
+    # get the starting indices
+    # start_idx = [None] * 6
+    # for
+
     # print(active_holes_alpha)
     # print(inactive_holes_alpha)
     # print(active_holes_beta)
