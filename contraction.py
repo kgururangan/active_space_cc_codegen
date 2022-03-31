@@ -267,12 +267,10 @@ def quadruple_contraction(expression):
             for idr, r in enumerate([x.lower() for x in expression.contracted[2]] + [x.upper() for x in expression.contracted[2]]):
                 for ids, s in enumerate([x.lower() for x in expression.contracted[3]] + [x.upper() for x in expression.contracted[3]]):
 
-                    weight = 1.0
-
-                    typ1 = type_of_index(p)
-                    typ2 = type_of_index(q)
-                    typ3 = type_of_index(r)
-                    typ4 = type_of_index(s)
+                    typ1 = type_of_index(p) + spin1
+                    typ2 = type_of_index(q) + spin2
+                    typ3 = type_of_index(r) + spin3
+                    typ4 = type_of_index(s) + spin4
 
                     if equivalence == '12':
                         if idp < idq: continue
@@ -306,18 +304,22 @@ def quadruple_contraction(expression):
                     if equivalence == '1234':
                         if idp < idq or idp < idr or idp < ids or idq < idr or idq < ids or idr < ids: continue
 
-                    if [typ1, spin1] == [typ2, spin2]:
-                        weight *= 0.5
-                    if [typ1, spin1] == [typ3, spin3]:
-                        weight *= 0.5
-                    if [typ2, spin2] == [typ3, spin3]:
-                        weight *= 0.5
-                    if [typ1, spin1] == [typ4, spin4]:
-                        weight *= 0.5
-                    if [typ2, spin2] == [typ4, spin4]:
-                        weight *= 0.5
-                    if [typ3, spin3] == [typ4, spin4]:
-                        weight *= 0.5
+                    npart = count_equivalent_partitions([typ1, typ2, typ3, typ4])
+                    weight = 1.0
+                    for n in npart:
+                        weight /= factorial(n)
+                    # if [typ1, spin1] == [typ2, spin2]:
+                    #     weight *= 0.5
+                    # if [typ1, spin1] == [typ3, spin3]:
+                    #     weight *= 0.5
+                    # if [typ2, spin2] == [typ3, spin3]:
+                    #     weight *= 0.5
+                    # if [typ1, spin1] == [typ4, spin4]:
+                    #     weight *= 0.5
+                    # if [typ2, spin2] == [typ4, spin4]:
+                    #     weight *= 0.5
+                    # if [typ3, spin3] == [typ4, spin4]:
+                    #     weight *= 0.5
 
                     arr1 = list(expression.A.indices)
                     arr1[expression.A.contracted_indices[0]] = p
@@ -458,6 +460,10 @@ def quintuple_contraction(expression):
     if [typ3, spin3] == [typ4, spin4] == [typ5, spin5] and [typ1, spin1] == [typ2, spin2]:
         equivalence='345,12'
 
+    # fourfold equivalence
+
+    # fivefold equivalence
+
     print(equivalence)
 
     list_of_expressions = []
@@ -467,202 +473,110 @@ def quintuple_contraction(expression):
                 for ids, s in enumerate([x.lower() for x in expression.contracted[3]] + [x.upper() for x in expression.contracted[3]]):
                     for idt, t in enumerate([x.lower() for x in expression.contracted[4]] + [x.upper() for x in expression.contracted[4]]):
 
-                        weight = 1.0
-
-                        npart = [0.0, 0.0]
-
-                        typ1 = type_of_index(p)
-                        typ2 = type_of_index(q)
-                        typ3 = type_of_index(r)
-                        typ4 = type_of_index(s)
-                        typ5 = type_of_index(t)
+                        typ1 = type_of_index(p) + spin1
+                        typ2 = type_of_index(q) + spin2
+                        typ3 = type_of_index(r) + spin3
+                        typ4 = type_of_index(s) + spin4
+                        typ5 = type_of_index(t) + spin5
 
                         if equivalence == '12':
                             if idp < idq: continue
-                            npart[0] = 2.0 - len({typ1, typ2})
                         if equivalence == '13':
                             if idp < idr: continue
-                            npart[0] = 2.0 - len({typ1, typ3})
                         if equivalence == '14':
                             if idp < ids: continue
-                            npart[0] = 2.0 - len({typ1, typ4})
                         if equivalence == '15':
                             if idp < idt: continue
-                            npart[0] = 2.0 - len({typ1, typ5})
                         if equivalence == '23':
                             if idq < idr: continue
-                            npart[0] = 2.0 - len({typ2, typ3})
                         if equivalence == '24':
                             if idq < ids: continue
-                            npart[0] = 2.0 - len({typ2, typ4})
                         if equivalence == '25':
                             if idq < idt: continue
-                            npart[0] = 2.0 - len({typ2, typ5})
                         if equivalence == '34':
                             if idr < ids: continue
-                            npart[0] = 2.0 - len({typ3, typ4})
                         if equivalence == '35':
                             if idr < idt: continue
-                            npart[0] = 2.0 - len({typ3, typ5})
                         if equivalence == '45':
                             if ids < idt: continue
-                            npart[0] = 2.0 - len({typ4, typ5})
 
                         if equivalence == '12,34':
                             if idp < idq or idr < ids: continue
-                            npart[0] = 2.0 - len({typ1, typ2})
-                            npart[1] = 2.0 - len({typ3, typ4})
                         if equivalence == '12,35':
                             if idp < idq or idr < idt: continue
-                            npart[0] = 2.0 - len({typ1, typ2})
-                            npart[1] = 2.0 - len({typ3, typ5})
                         if equivalence == '12,45':
                             if idp < idq or ids < idt: continue
-                            npart[0] = 2.0 - len({typ1, typ2})
-                            npart[1] = 2.0 - len({typ4, typ5})
                         if equivalence == '13,24':
                             if idp < idr or idq < ids: continue
-                            npart[0] = 2.0 - len({typ1, typ3})
-                            npart[1] = 2.0 - len({typ2, typ4})
                         if equivalence == '13,25':
                             if idp < idr or idq < idt: continue
-                            npart[0] = 2.0 - len({typ1, typ3})
-                            npart[1] = 2.0 - len({typ2, typ5})
                         if equivalence == '13,45':
                             if idp < idr or ids < idt: continue
-                            npart[0] = 2.0 - len({typ1, typ3})
-                            npart[1] = 2.0 - len({typ4, typ5})
                         if equivalence == '14,23':
                             if idp < ids or idq < idr: continue
-                            npart[0] = 2.0 - len({typ1, typ4})
-                            npart[1] = 2.0 - len({typ2, typ3})
                         if equivalence == '14,25':
                             if idp < ids or idq < idt: continue
-                            npart[0] = 2.0 - len({typ1, typ4})
-                            npart[1] = 2.0 - len({typ2, typ5})
                         if equivalence == '14,35':
                             if idp < ids or idr < idt: continue
-                            npart[0] = 2.0 - len({typ1, typ4})
-                            npart[1] = 2.0 - len({typ3, typ5})
                         if equivalence == '15,23':
                             if idp < idt or idq < idr: continue
-                            npart[0] = 2.0 - len({typ1, typ5})
-                            npart[1] = 2.0 - len({typ2, typ3})
                         if equivalence == '15,24':
                             if idp < idt or idq < ids: continue
-                            npart[0] = 2.0 - len({typ1, typ5})
-                            npart[1] = 2.0 - len({typ2, typ4})
                         if equivalence == '15,34':
                             if idp < idt or idr < ids: continue
-                            npart[0] = 2.0 - len({typ1, typ5})
-                            npart[1] = 2.0 - len({typ3, typ4})
                         if equivalence == '23,45':
                             if idq < idr or ids < idt: continue
-                            npart[0] = 2.0 - len({typ2, typ3})
-                            npart[1] = 2.0 - len({typ4, typ5})
                         if equivalence == '24,35':
                             if idq < ids or idr < idt: continue
-                            npart[0] = 2.0 - len({typ2, typ4})
-                            npart[1] = 2.0 - len({typ3, typ5})
                         if equivalence == '25,34':
                             if idq < idt or idr < ids: continue
-                            npart[0] = 2.0 - len({typ2, typ5})
-                            npart[1] = 2.0 - len({typ3, typ4})
 
                         if equivalence == '123':
                             if idp < idq or idp < idr or idq < idr: continue
-                            npart[0] = 3.0 - len({typ1, typ2, typ3})
                         if equivalence == '124':
                             if idp < idq or idp < ids or idq < ids: continue
-                            npart[0] = 3.0 - len({typ1, typ2, typ4})
                         if equivalence == '125':
                             if idp < idq or idp < idt or idq < idt: continue
-                            npart[0] = 3.0 - len({typ1, typ2, typ5})
                         if equivalence == '134':
                             if idp < idr or idp < ids or idr < ids: continue
-                            npart[0] = 3.0 - len({typ1, typ3, typ4})
                         if equivalence == '135':
                             if idp < idr or idp < idt or idr < idt: continue
-                            npart[0] = 3.0 - len({typ1, typ3, typ5})
                         if equivalence == '145':
                             if idp < ids or idp < idt or ids < idt: continue
-                            npart[0] = 3.0 - len({typ1, typ4, typ5})
                         if equivalence == '234':
                             if idq < idr or idq < ids or idr < ids: continue
-                            npart[0] = 3.0 - len({typ2, typ3, typ4})
                         if equivalence == '235':
                             if idq < idr or idq < idt or idr < idt: continue
-                            npart[0] = 3.0 - len({typ2, typ3, typ5})
                         if equivalence == '245':
                             if idq < ids or idq < idt or ids < idt: continue
-                            npart[0] = 3.0 - len({typ2, typ4, typ5})
                         if equivalence == '345':
                             if idr < ids or idr < idt or ids < idt: continue
-                            npart[0] = 3.0 - len({typ3, typ4, typ5})
 
                         if equivalence == '123,45':
                             if idp < idq or idp < idr or idq < idr or ids < idt: continue
-                            npart[0] = 3 - len({typ1, typ2, typ3}) - 1
-                            npart[1] = 2 - len({typ4, typ5}) - 1
                         if equivalence == '124,35':
                             if idp < idq or idp < ids or idq < ids or idr < idt: continue
-                            npart[0] = 3 - len({typ1, typ2, typ4}) - 1
-                            npart[1] = 2 - len({typ3, typ5}) - 1
                         if equivalence == '125,34':
                             if idp < idq or idp < idt or idq < idt or idr < ids: continue
-                            npart[0] = 3.0 - len({typ1, typ2, typ5})
-                            npart[1] = 2.0 - len({typ3, typ4})
                         if equivalence == '134,25':
                             if idp < idr or idp < ids or idr < ids or idq < idt: continue
-                            npart[0] = 3.0 - len({typ1, typ3, typ4})
-                            npart[1] = 2.0 - len({typ2, typ5})
                         if equivalence == '135,24':
                             if idp < idr or idp < idt or idr < idt or idq < ids: continue
-                            npart[0] = 3.0 - len({typ1, typ3, typ5})
-                            npart[1] = 2.0 - len({typ2, typ4})
                         if equivalence == '145,23':
                             if idp < ids or idp < idt or ids < idt or idq < idr: continue
-                            npart[0] = 3.0 - len({typ1, typ4, typ5})
-                            npart[1] = 2.0 - len({typ2, typ3})
                         if equivalence == '234,15':
                             if idq < idr or idq < ids or idr < ids or idp < idt: continue
-                            npart[0] = 3.0 - len({typ2, typ3, typ4})
-                            npart[1] = 2.0 - len({typ1, typ5})
                         if equivalence == '235,14':
                             if idq < idr or idq < idt or idr < idt or idp < ids: continue
-                            npart[0] = 3.0 - len({typ2, typ3, typ5})
-                            npart[1] = 2.0 - len({typ1, typ4})
                         if equivalence == '245,13':
                             if idq < ids or idq < idt or ids < idt or idp < idr: continue
-                            npart[0] = 3.0 - len({typ2, typ4, typ5})
-                            npart[1] = 2.0 - len({typ1, typ3})
                         if equivalence == '345,12':
                             if idr < ids or idr < idt or ids < idt or idp < idq: continue
-                            npart[0] = 3.0 - len({typ3, typ4, typ5})
-                            npart[1] = 2.0 - len({typ1, typ2})
 
-
-                        weight = 1.0/(factorial(npart[0]) * factorial(npart[1]))
-                        # if [typ1, spin1] == [typ2, spin2]:
-                        #     weight *= 0.5
-                        # if [typ1, spin1] == [typ3, spin3]:
-                        #     weight *= 0.5
-                        # if [typ1, spin1] == [typ4, spin4]:
-                        #     weight *= 0.5
-                        # if [typ1, spin1] == [typ5, spin5]:
-                        #     weight *= 0.5
-                        # if [typ2, spin2] == [typ3, spin3]:
-                        #     weight *= 0.5
-                        # if [typ2, spin2] == [typ4, spin4]:
-                        #     weight *= 0.5
-                        # if [typ2, spin2] == [typ5, spin5]:
-                        #     weight *= 0.5
-                        # if [typ3, spin3] == [typ4, spin4]:
-                        #     weight *= 0.5
-                        # if [typ3, spin3] == [typ5, spin5]:
-                        #     weight *= 0.5
-                        # if [typ4, spin4] == [typ5, spin5]:
-                        #     weight *= 0.5
+                        npart = count_equivalent_partitions([typ1, typ2, typ3, typ4, typ5])
+                        weight = 1.0
+                        for n in npart:
+                            weight /= factorial(n)
 
                         arr1 = list(expression.A.indices)
                         arr1[expression.A.contracted_indices[0]] = p
@@ -692,3 +606,20 @@ def quintuple_contraction(expression):
                         list_of_expressions.append(BinaryExpression(sign, weight, term1, term2))
 
     return list_of_expressions
+
+
+def count_equivalent_partitions(lst):
+
+    temp = [lst.count(x) for x in lst]
+
+    partition_count = [0] * len(lst)
+
+    cnt = 0
+    for i, t in enumerate(temp):
+        cnt += t
+        if cnt > len(lst):
+            break
+        else:
+            partition_count[i] = t
+
+    return partition_count
