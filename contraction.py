@@ -361,7 +361,7 @@ def quintuple_contraction(expression):
     spin4 = expression.spin_of_contracted[3]
     spin5 = expression.spin_of_contracted[4]
 
-    print(expression.contracted)
+    #print(expression.contracted)
 
     equivalence = ''
     if [typ1, spin1] == [typ2, spin2]:
@@ -464,7 +464,7 @@ def quintuple_contraction(expression):
 
     # fivefold equivalence
 
-    print(equivalence)
+    #print(equivalence)
 
     list_of_expressions = []
     for idp, p in enumerate([x.lower() for x in expression.contracted[0]] + [x.upper() for x in expression.contracted[0]]):
