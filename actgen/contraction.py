@@ -33,9 +33,12 @@ from actgen.utilities import check_include_term
 # 9) quadruple (1234) (strength = 24)
 # (*) Note that while (8) and (9) have the same strength, (8) needs 7 indices while (9) uses just 4 so they will never occur at the same time
 
-def contract(expression, num_active, order):
+def contract(expression, num_active):
 
     retained_contractions = []
+
+    # Assume that in each expression, the second argument is T, R, or L
+    order = expression.B.order
 
     if len(expression.contracted) == 1:
         all_contractions = single_contraction(expression, order)

@@ -10,6 +10,7 @@ class Generator:
     def __init__(self, projection, projection_spincase, num_active,
                  output_quantity=None, output_label='dT', full_asym_weight=None, active_contract=True,
                  active_obj_A=False, active_obj_B=True,
+                 print_vo_slices_A=True, print_vo_slices_B=False,
                  print_ph_slices_A=True, print_ph_slices_B=True,
                  active_output_quantity=True):
 
@@ -17,13 +18,14 @@ class Generator:
         self.projection = projection
         # projection spincase (aaa, aab, abb, bbb, aa, ab, bb, a, b)
         self.projection_spincase = projection_spincase
-        self.order = len(projection_spincase)
         # number of active
         self.num_active = num_active
         self.active_contract = active_contract
         self.active_obj_A = active_obj_A
         self.active_obj_B = active_obj_B
         self.active_output_quantity=active_output_quantity
+        self.use_vo_slicing_A = print_vo_slices_A
+        self.use_vo_slicing_B = print_vo_slices_B
         self.use_ph_slicing_A = print_ph_slices_A
         self.use_ph_slicing_B = print_ph_slices_B
         self.contractions = []
@@ -53,7 +55,7 @@ class Generator:
 
             if self.active_contract:
                 # get all possible active-space contractions by splitting the contraction lines into active/inactive
-                self.contractions.append(contract(expr, self.num_active, self.order))
+                self.contractions.append(contract(expr, self.num_active))
             else:
                 self.contractions.append([expr])
             self.permutation_weights.append(get_permutation_weight(expr, self.projection_spincase))
@@ -106,8 +108,8 @@ class Generator:
         for expr in expressions:
             print('        ' + sign_to_str(expr.sign) + str(expr.weight) + '*'
                   + 'np.einsum(' + "'" + expr.A.indices + ',' +  expr.B.indices + '->' + self.projection + "'" + ', '
-                  + expr.A.to_sliced_string(active_object=self.active_obj_A, use_ph_slices=self.use_ph_slicing_A) + ', '
-                  + expr.B.to_sliced_string(active_object=self.active_obj_B, use_ph_slices=self.use_ph_slicing_B) + ', '
+                  + expr.A.to_sliced_string(active_object=self.active_obj_A, use_vo_slices=self.use_vo_slicing_A, use_ph_slices=self.use_ph_slicing_A) + ', '
+                  + expr.B.to_sliced_string(active_object=self.active_obj_B, use_vo_slices=self.use_vo_slicing_B, use_ph_slices=self.use_ph_slicing_B) + ', '
                   + 'optimize=True)')
         print(')')
 

@@ -27,6 +27,24 @@ def main(args):
 
     g.print_expression()
 
+    print("=========================================================================")
+
+    g = Generator(projection, "aaaa", 1, active_obj_A=False, active_obj_B=False, print_vo_slices_A=True, print_vo_slices_B=False)
+
+    expressions_2 = [
+        BinaryExpression(1.0, 1.0, Term("I", "aaa", "BCDJef"), Term("T", "aaa", "AefIKL"))    # (j/ikl)(a/bcd) = 16
+    ]
+
+    for expression in expressions_2:
+
+
+        expression.A.indices = change_term_to_projection(expression.A.indices, projection)
+        expression.B.indices = change_term_to_projection(expression.B.indices, projection)
+
+        g.generate(expression)
+
+    g.print_expression()
+
 
 if __name__ == "__main__":
 

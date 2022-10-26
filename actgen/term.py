@@ -36,7 +36,7 @@ class BinaryExpression:
 
 class Term:
 
-    def __init__(self, symbol, spin, indices, is_full = None):
+    def __init__(self, symbol, spin, indices, is_full=None):
 
         self.symbol = symbol.upper()
         self.order = len(spin)
@@ -94,14 +94,17 @@ class Term:
     def to_index_string(self):
         return ''.join([self.symbol, '.', self.spin, '(', self.indices, ')'])
 
-    def to_sliced_string(self, active_object=True, use_ph_slices=True):
+    def to_sliced_string(self, active_object=True, use_vo_slices=True, use_ph_slices=True):
 
         if use_ph_slices:
             if not active_object:
                 slices = ''
                 for sl in self.act_spin_slices:
                     slices += str(sl) + ',' + ' '
-                return ''.join([self.symbol, '.', self.spin, '.', ''.join(self.ph_slices), '[', slices[:-2], ']'])
+                if use_vo_slices:
+                    return ''.join([self.symbol, '.', self.spin, '.', ''.join(self.ph_slices), '[', slices[:-2], ']'])
+                else:
+                    return ''.join([self.symbol, '.', self.spin, '[', slices[:-2], ']'])
             else:
                 return ''.join([self.symbol, '.', self.spin, '.', ''.join(self.act_ph_slices)])
         else:
@@ -127,6 +130,11 @@ if __name__ == "__main__":
     h = Term('H', 'bb', 'DMLE')
     print(h.to_sliced_string(active_object=False))
 
+    h = Term("x", "aaa", "BCDJef")
+    print(h.to_sliced_string(active_object=False))
+
+    t = Term("T", "aaa", "AefIKL")
+    print(t.to_sliced_string(active_object=True))
 
     expr = BinaryExpression(1.0, 1.0, h, t)
     print(expr.A.contracted_indices)
