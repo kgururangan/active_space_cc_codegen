@@ -1,6 +1,6 @@
 from math import factorial
 
-from actgen.indices import fix_t3_indices, type_of_index
+from actgen.indices import fix_t3_indices, fix_t4_indices, type_of_index
 from actgen.term import Term, BinaryExpression
 from actgen.utilities import check_include_term
 
@@ -80,9 +80,8 @@ def single_contraction(expression, order):
             new_arr, sign_perm = fix_t3_indices(arr2, expression.B.spin)
             sign = expression.sign * sign_perm
         elif len(arr2) == 8:
-            #new_arr, sign_perm = fix_t4_indices(arr2, expression.B.spin)
-            #sign = expression.sign * sign_perm
-            pass
+            new_arr, sign_perm = fix_t4_indices(arr2, expression.B.spin)
+            sign = expression.sign * sign_perm
         else:
             new_arr = arr2
             sign = expression.sign
@@ -138,8 +137,7 @@ def double_contraction(expression, order):
             if order == 3:
                 new_arr, sign_perm = fix_t3_indices(arr2, expression.B.spin)
             elif order == 4:
-                #new_arr, sign_perm = fix_t4_indices(arr2, expression.B.spin)
-                pass
+                new_arr, sign_perm = fix_t4_indices(arr2, expression.B.spin)
             sign = expression.sign * sign_perm
 
             term1 = Term(expression.A.symbol,
@@ -213,8 +211,7 @@ def triple_contraction(expression, order):
                 if order == 3:
                     new_arr, sign_perm = fix_t3_indices(arr2, expression.B.spin)
                 elif order == 4:
-                    # new_arr, sign_perm = fix_t3_indices(arr2, expression.B.spin)
-                    pass
+                    new_arr, sign_perm = fix_t3_indices(arr2, expression.B.spin)
                 sign = expression.sign * sign_perm
 
                 term1 = Term(expression.A.symbol,
@@ -348,8 +345,7 @@ def quadruple_contraction(expression, order):
                     if order == 3:
                         new_arr, sign_perm = fix_t3_indices(arr2, expression.B.spin)
                     elif order == 4:
-                        # new_arr, sign_perm = fix_t4_indices(arr2, expression.B.spin)
-                        pass
+                        new_arr, sign_perm = fix_t4_indices(arr2, expression.B.spin)
                     sign = expression.sign * sign_perm
 
                     term1 = Term(expression.A.symbol,
@@ -611,8 +607,7 @@ def quintuple_contraction(expression, order):
                         if order == 3:
                             new_arr, sign_perm = fix_t3_indices(arr2, expression.B.spin)
                         elif order == 4:
-                            # new_arr, sign_perm = fix_t4_indices(arr2, expression.B.spin)
-                            pass
+                            new_arr, sign_perm = fix_t4_indices(arr2, expression.B.spin)
                         sign = expression.sign * sign_perm
 
                         term1 = Term(expression.A.symbol,

@@ -7,11 +7,13 @@ def argsort(seq):
 def signPermutation(p):
     n = len(p)
 
-    # ADDED THIS FOR LOOP PRINTER MODULE. THIS WAS NOT USED
-    # WHEN GENERATING THE UPDATES!
+    ###
+    # ADDED THIS FOR LOOP PRINTER MODULE.
+    # THIS WAS NOT USED WHEN GENERATING THE UPDATES!
     if n == 0: return 1.0
     if 0 not in p:
         p = [x - min(p) for x in p]
+    ###
 
     visited = [False] * n
     sign = 1.0

@@ -117,23 +117,11 @@ def fix_t3_indices(arr, spin):
     return new_arr, sign
 
 
-def get_slicestr_t3(contr):
-    slicestr = [None] * 6
-    for idx, c in enumerate(contr):
-        typeOfIndex = type_of_index(c)
-        if typeOfIndex == 'active_hole':
-            slicestr[idx] = 'O'
-        if typeOfIndex == 'inactive_hole':
-            slicestr[idx] = 'o'
-        if typeOfIndex == 'active_particle':
-            slicestr[idx] = 'V'
-        if typeOfIndex == 'inactive_particle':
-            slicestr[idx] = 'v'
-    slicestrjoined = ''.join(slicestr)
-    return slicestrjoined
-
 def fix_t4_indices(arr, spin):
     sign = 1.0
+
+    # a  b  c  d  i  j  k  l
+    # 0  1  2  3  4  5  6  7
 
     perm = list(range(8))
     if spin in ['aaaa', 'bbbb']:
@@ -155,26 +143,35 @@ def fix_t4_indices(arr, spin):
 
     perm = list(range(8))
     if spin in ['aabb']:
-        particles = arr[1:3]
-        holes = arr[4:]
-        perm[1:3] = [x + 1 for x in fix_particle_index(particles)]
-        perm[4:] = [x + 1 for x in fix_hole_index(holes)]
+        particles_a = arr[:2]
+        holes_a = arr[4:6]
+        particles_b = arr[2:4]
+        holes_b = arr[6:]
+        perm[:2] = [x for x in fix_particle_index(particles_a)]
+        perm[2:4] = [x + 2 for x in fix_particle_index(particles_b)]
+        perm[4:6] = [x for x in fix_hole_index(holes_a, 4)]
+        perm[6:]  = [x + 2 for x in fix_hole_index(holes_b, 4)]
         new_arr = [arr[i] for i in perm]
-        sign = sign * signPermutation([x - 1 for x in perm[1:3]]) * signPermutation([x - 4 for x in perm[4:]])
+        sign = sign * signPermutation(perm[1:2]) * signPermutation([x - 2 for x in perm[2:4]])\
+                    * signPermutation([x - 4 for x in perm[4:6]]) * signPermutation([x - 6 for x in perm[6:]])
+
+    perm = list(range(8))
+    if spin in ['abbb']:
+        particles = arr[1:4]
+        holes = arr[5:]
+        perm[1:4] = [x + 1 for x in fix_particle_index(particles)]
+        perm[5:] = [x + 1 for x in fix_hole_index(holes, 4)]
+        new_arr = [arr[i] for i in perm]
+        sign = sign * signPermutation([x - 1 for x in perm[1:4]]) * signPermutation([x - 5 for x in perm[5:]])
 
     return new_arr, sign
 
-def get_slicestr_t4(contr):
-    slicestr = [None] * 8
-    for idx, c in enumerate(contr):
-        typeOfIndex = type_of_index(c)
-        if typeOfIndex == 'active_hole':
-            slicestr[idx] = 'O'
-        if typeOfIndex == 'inactive_hole':
-            slicestr[idx] = 'o'
-        if typeOfIndex == 'active_particle':
-            slicestr[idx] = 'V'
-        if typeOfIndex == 'inactive_particle':
-            slicestr[idx] = 'v'
-    slicestrjoined = ''.join(slicestr)
-    return slicestrjoined
+if __name__ == "__main__":
+
+    arr = "AbCdiJKl"
+
+    new_arr, sign = fix_t4_indices(arr, 'aabb')
+
+    print(arr)
+    print(new_arr)
+    print(sign)

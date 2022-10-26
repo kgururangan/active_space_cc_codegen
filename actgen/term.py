@@ -119,13 +119,14 @@ class Term:
 if __name__ == "__main__":
 
     t = Term('T', 'aab', 'Abfijn')
-    print(t.to_string(active_object=True))
+    print(t.to_sliced_string(active_object=True))
 
-    h = Term('H', 'bb', 'cnKf')
-    print(h.to_string(active_object=False))
+    t = Term('T', 'aabb', 'AbCEijKM')
+    print(t.to_sliced_string(active_object=True))
 
-    h2 = Term('H', 'bb', 'cnKf')
-    print(h.to_string(active_object=False))
+    h = Term('H', 'bb', 'DMLE')
+    print(h.to_sliced_string(active_object=False))
+
 
     expr = BinaryExpression(1.0, 1.0, h, t)
     print(expr.A.contracted_indices)

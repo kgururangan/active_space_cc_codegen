@@ -103,46 +103,153 @@ def generate_active_permutations(reference_expression, projection_spincase, verb
 
 
 def get_swapping_dict(contr, spincase):
-    if spincase in ['aaa', 'aa', 'a']:
-        dict_out = {'virt_alpha': [x for x in ['a', 'b', 'c'] if x in contr],
-                    'core_alpha': [x for x in ['i', 'j', 'k'] if x in contr],
-                    'act_hole_alpha': [x for x in ['I', 'J', 'K'] if x in contr],
-                    'act_particle_alpha': [x for x in ['A', 'B', 'C'] if x in contr],
-                    'virt_beta': [],
-                    'core_beta': [],
-                    'act_hole_beta': [],
-                    'act_particle_beta': []
-                    }
-    if spincase in ['aab']:
-        dict_out = {'virt_alpha': [x for x in ['a', 'b'] if x in contr],
-                    'core_alpha': [x for x in ['i', 'j'] if x in contr],
-                    'act_hole_alpha': [x for x in ['I', 'J'] if x in contr],
-                    'act_particle_alpha': [x for x in ['A', 'B'] if x in contr],
-                    'virt_beta': [x for x in ['c'] if x in contr],
-                    'core_beta': [x for x in ['k'] if x in contr],
-                    'act_hole_beta': [x for x in ['K'] if x in contr],
-                    'act_particle_beta': [x for x in ['C'] if x in contr]
-                    }
-    if spincase in ['abb', 'ab']:
-        dict_out = {'virt_alpha': [x for x in ['a'] if x in contr],
-                    'core_alpha': [x for x in ['i'] if x in contr],
-                    'act_hole_alpha': [x for x in ['I'] if x in contr],
-                    'act_particle_alpha': [x for x in ['A'] if x in contr],
-                    'virt_beta': [x for x in ['b', 'c'] if x in contr],
-                    'core_beta': [x for x in ['j', 'k'] if x in contr],
-                    'act_hole_beta': [x for x in ['J', 'K'] if x in contr],
-                    'act_particle_beta': [x for x in ['B', 'C'] if x in contr]
-                    }
-    if spincase in ['bbb', 'bb', 'b']:
-        dict_out = {'virt_beta': [x for x in ['a', 'b', 'c'] if x in contr],
-                    'core_beta': [x for x in ['i', 'j', 'k'] if x in contr],
-                    'act_hole_beta': [x for x in ['I', 'J', 'K'] if x in contr],
-                    'act_particle_beta': [x for x in ['A', 'B', 'C'] if x in contr],
-                    'virt_alpha': [],
-                    'core_alpha': [],
-                    'act_hole_alpha': [],
-                    'act_particle_alpha': []
-                    }
+
+    order = len(spincase)
+
+    if order == 1:
+        if spincase in ['a']:
+            dict_out = {'virt_alpha': [x for x in ['a'] if x in contr],
+                        'core_alpha': [x for x in ['i'] if x in contr],
+                        'act_hole_alpha': [x for x in ['I'] if x in contr],
+                        'act_particle_alpha': [x for x in ['A'] if x in contr],
+                        'virt_beta': [],
+                        'core_beta': [],
+                        'act_hole_beta': [],
+                        'act_particle_beta': []
+                        }
+        if spincase in ['b']:
+            dict_out = {'virt_beta': [x for x in ['a'] if x in contr],
+                        'core_beta': [x for x in ['i'] if x in contr],
+                        'act_hole_beta': [x for x in ['I'] if x in contr],
+                        'act_particle_beta': [x for x in ['A'] if x in contr],
+                        'virt_alpha': [],
+                        'core_alpha': [],
+                        'act_hole_alpha': [],
+                        'act_particle_alpha': []
+                        }
+    if order == 2:
+        if spincase in ['aa']:
+            dict_out = {'virt_alpha': [x for x in ['a', 'b'] if x in contr],
+                        'core_alpha': [x for x in ['i', 'j'] if x in contr],
+                        'act_hole_alpha': [x for x in ['I', 'J'] if x in contr],
+                        'act_particle_alpha': [x for x in ['A', 'B'] if x in contr],
+                        'virt_beta': [],
+                        'core_beta': [],
+                        'act_hole_beta': [],
+                        'act_particle_beta': []
+                        }
+        if spincase in ['ab']:
+            dict_out = {'virt_alpha': [x for x in ['a'] if x in contr],
+                        'core_alpha': [x for x in ['i'] if x in contr],
+                        'act_hole_alpha': [x for x in ['I'] if x in contr],
+                        'act_particle_alpha': [x for x in ['A'] if x in contr],
+                        'virt_beta': [x for x in ['b'] if x in contr],
+                        'core_beta': [x for x in ['j'] if x in contr],
+                        'act_hole_beta': [x for x in ['J'] if x in contr],
+                        'act_particle_beta': [x for x in ['B'] if x in contr]
+                        }
+        if spincase in ['bb']:
+            dict_out = {'virt_beta': [x for x in ['a', 'b'] if x in contr],
+                        'core_beta': [x for x in ['i', 'j'] if x in contr],
+                        'act_hole_beta': [x for x in ['I', 'J'] if x in contr],
+                        'act_particle_beta': [x for x in ['A', 'B'] if x in contr],
+                        'virt_alpha': [],
+                        'core_alpha': [],
+                        'act_hole_alpha': [],
+                        'act_particle_alpha': []
+                        }
+    if order == 3:
+        if spincase in ['aaa']:
+            dict_out = {'virt_alpha': [x for x in ['a', 'b', 'c'] if x in contr],
+                        'core_alpha': [x for x in ['i', 'j', 'k'] if x in contr],
+                        'act_hole_alpha': [x for x in ['I', 'J', 'K'] if x in contr],
+                        'act_particle_alpha': [x for x in ['A', 'B', 'C'] if x in contr],
+                        'virt_beta': [],
+                        'core_beta': [],
+                        'act_hole_beta': [],
+                        'act_particle_beta': []
+                        }
+        if spincase in ['aab']:
+            dict_out = {'virt_alpha': [x for x in ['a', 'b'] if x in contr],
+                        'core_alpha': [x for x in ['i', 'j'] if x in contr],
+                        'act_hole_alpha': [x for x in ['I', 'J'] if x in contr],
+                        'act_particle_alpha': [x for x in ['A', 'B'] if x in contr],
+                        'virt_beta': [x for x in ['c'] if x in contr],
+                        'core_beta': [x for x in ['k'] if x in contr],
+                        'act_hole_beta': [x for x in ['K'] if x in contr],
+                        'act_particle_beta': [x for x in ['C'] if x in contr]
+                        }
+        if spincase in ['abb']:
+            dict_out = {'virt_alpha': [x for x in ['a'] if x in contr],
+                        'core_alpha': [x for x in ['i'] if x in contr],
+                        'act_hole_alpha': [x for x in ['I'] if x in contr],
+                        'act_particle_alpha': [x for x in ['A'] if x in contr],
+                        'virt_beta': [x for x in ['b', 'c'] if x in contr],
+                        'core_beta': [x for x in ['j', 'k'] if x in contr],
+                        'act_hole_beta': [x for x in ['J', 'K'] if x in contr],
+                        'act_particle_beta': [x for x in ['B', 'C'] if x in contr]
+                        }
+        if spincase in ['bbb']:
+            dict_out = {'virt_beta': [x for x in ['a', 'b', 'c'] if x in contr],
+                        'core_beta': [x for x in ['i', 'j', 'k'] if x in contr],
+                        'act_hole_beta': [x for x in ['I', 'J', 'K'] if x in contr],
+                        'act_particle_beta': [x for x in ['A', 'B', 'C'] if x in contr],
+                        'virt_alpha': [],
+                        'core_alpha': [],
+                        'act_hole_alpha': [],
+                        'act_particle_alpha': []
+                        }
+    if order == 4:
+        if spincase in ['aaaa']:
+            dict_out = {'virt_alpha': [x for x in ['a', 'b', 'c', 'd'] if x in contr],
+                        'core_alpha': [x for x in ['i', 'j', 'k', 'l'] if x in contr],
+                        'act_hole_alpha': [x for x in ['I', 'J', 'K', 'L'] if x in contr],
+                        'act_particle_alpha': [x for x in ['A', 'B', 'C', 'D'] if x in contr],
+                        'virt_beta': [],
+                        'core_beta': [],
+                        'act_hole_beta': [],
+                        'act_particle_beta': []
+                        }
+        if spincase in ['aaab']:
+            dict_out = {'virt_alpha': [x for x in ['a', 'b', 'c'] if x in contr],
+                        'core_alpha': [x for x in ['i', 'j', 'k'] if x in contr],
+                        'act_hole_alpha': [x for x in ['I', 'J', 'K'] if x in contr],
+                        'act_particle_alpha': [x for x in ['A', 'B', 'C'] if x in contr],
+                        'virt_beta': [x for x in ['d'] if x in contr],
+                        'core_beta': [x for x in ['l'] if x in contr],
+                        'act_hole_beta': [x for x in ['L'] if x in contr],
+                        'act_particle_beta': [x for x in ['D'] if x in contr]
+                        }
+        if spincase in ['aabb']:
+            dict_out = {'virt_alpha': [x for x in ['a', 'b'] if x in contr],
+                        'core_alpha': [x for x in ['i', 'j'] if x in contr],
+                        'act_hole_alpha': [x for x in ['I', 'J'] if x in contr],
+                        'act_particle_alpha': [x for x in ['A', 'B'] if x in contr],
+                        'virt_beta': [x for x in ['c', 'd'] if x in contr],
+                        'core_beta': [x for x in ['k', 'l'] if x in contr],
+                        'act_hole_beta': [x for x in ['K', 'L'] if x in contr],
+                        'act_particle_beta': [x for x in ['C', 'D'] if x in contr]
+                        }
+        if spincase in ['abbb']:
+            dict_out = {'virt_beta': [x for x in ['b', 'c', 'd'] if x in contr],
+                        'core_beta': [x for x in ['j', 'k', 'l'] if x in contr],
+                        'act_hole_beta': [x for x in ['J', 'K', 'L'] if x in contr],
+                        'act_particle_beta': [x for x in ['B', 'C', 'D'] if x in contr],
+                        'virt_alpha': [x for x in ['a'] if x in contr],
+                        'core_alpha': [x for x in ['i'] if x in contr],
+                        'act_hole_alpha': [x for x in ['I'] if x in contr],
+                        'act_particle_alpha': [x for x in ['A'] if x in contr]
+                        }
+        if spincase in ['bbbb']:
+            dict_out = {'virt_beta': [x for x in ['a', 'b', 'c', 'd'] if x in contr],
+                        'core_beta': [x for x in ['i', 'j', 'k', 'l'] if x in contr],
+                        'act_hole_beta': [x for x in ['I', 'J', 'K', 'L'] if x in contr],
+                        'act_particle_beta': [x for x in ['A', 'B', 'C', 'D'] if x in contr],
+                        'virt_alpha': [],
+                        'core_alpha': [],
+                        'act_hole_alpha': [],
+                        'act_particle_alpha': []
+                        }
 
     # this part is done because you only need one swap between representative
     # indices of each type. Any additional swaps that can be generated are
