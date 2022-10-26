@@ -346,8 +346,8 @@ def t4c_loop(projection='11111111'):
 
 def t4d_loop(projection='11111111'):
 
-    dims, act = get_dims_from_projection(projection, 'aabb', use_full=True)
-    perms = get_antisymmetrizer_combinations(projection, 'aabb')
+    dims, act = get_dims_from_projection(projection, 'abbb', use_full=True)
+    perms = get_antisymmetrizer_combinations(projection, 'abbb')
 
     print('subroutine update_t4d(t4d, resid, X4D, &')
     print('                             fA_oo, fA_vv, fB_oo, fB_vv, &')
