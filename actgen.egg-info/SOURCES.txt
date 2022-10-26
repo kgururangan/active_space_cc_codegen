@@ -1,0 +1,15 @@
+README.md
+setup.cfg
+setup.py
+actgen/__init__.py
+actgen/contraction.py
+actgen/diagramperms.py
+actgen/generator.py
+actgen/indices.py
+actgen/term.py
+actgen/utilities.py
+actgen/weights.py
+actgen.egg-info/PKG-INFO
+actgen.egg-info/SOURCES.txt
+actgen.egg-info/dependency_links.txt
+actgen.egg-info/top_level.txt
