@@ -2,7 +2,8 @@ from actgen.diagramperms import generate_active_permutations
 from actgen.weights import get_permutation_weight
 from actgen.contraction import contract
 from actgen.indices import type_of_index, index_classification
-from actgen.utilities import sign_to_str
+from actgen.utilities import sign_to_str, change_term_to_projection
+
 from math import factorial
 
 class Generator:
@@ -43,7 +44,7 @@ class Generator:
         else:
             self.output_quantity = output_quantity
 
-    def generate(self, expression):
+    def generate(self, expression, print_term=False):
 
         # generate all unique active-space diagram permutations
         unique_expressions = generate_active_permutations(expression, self.projection_spincase)
@@ -51,7 +52,8 @@ class Generator:
         # loop over uniquely permuted diagrams
         for expr in unique_expressions:
 
-            #print(expr.to_string())    # uncomment to print the unique diagram terms
+            if print_term:
+                print(expr.to_string())    # uncomment to print the unique diagram terms
 
             if self.active_contract:
                 # get all possible active-space contractions by splitting the contraction lines into active/inactive
@@ -89,8 +91,6 @@ class Generator:
                     slices.append( ''.join( ['v', double_spin_string[inm]] ) )
             self.output_quantity += '[' + ', '.join(slices) + ']'
 
-
-
     def print_expression(self):
         # for expressions, perm_weight in zip(self.contractions, self.permutation_weights):
         #     yield self.expression_to_string(expressions, perm_weight)
@@ -100,11 +100,9 @@ class Generator:
             self.number_terms += 1
         print("# of terms = ", self.number_terms)
 
-
     def expression_to_string(self, expressions, weight):
         # print the term
         print(self.output_quantity + ' += (' + str(weight) + '/' + str(self.full_asym_weight) + ') * (')
-
         for expr in expressions:
             print('        ' + sign_to_str(expr.sign) + str(expr.weight) + '*'
                   + 'np.einsum(' + "'" + expr.A.indices + ',' +  expr.B.indices + '->' + self.projection + "'" + ', '
@@ -112,7 +110,6 @@ class Generator:
                   + expr.B.to_sliced_string(active_object=self.active_obj_B, use_vo_slices=self.use_vo_slicing_B, use_ph_slices=self.use_ph_slicing_B) + ', '
                   + 'optimize=True)')
         print(')')
-
 
     def get_full_asym_weight(self):
         self.full_asym_weight = 1.0
@@ -172,3 +169,13 @@ class Generator:
                 n_inact += 1
         self.full_asym_weight *= factorial(n_act)
         self.full_asym_weight *= factorial(n_inact)
+
+    def kernel(self, expressions, projection, print_term=False):
+
+        for expression in expressions:
+            expression.A.indices = change_term_to_projection(expression.A.indices, projection)
+            expression.B.indices = change_term_to_projection(expression.B.indices, projection)
+
+            self.generate(expression, print_term=print_term)
+
+        self.print_expression()
