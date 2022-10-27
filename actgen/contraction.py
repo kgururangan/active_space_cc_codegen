@@ -316,10 +316,15 @@ def quadruple_contraction(expression, order):
                     if equivalence == '1234':
                         if idp < idq or idp < idr or idp < ids or idq < idr or idq < ids or idr < ids: continue
 
-                    npart = count_equivalent_partitions([typ1, typ2, typ3, typ4])
-                    weight = 1.0
-                    for n in npart:
-                        weight /= factorial(n)
+                    #print([typ1, typ2, typ3, typ4])
+                    #npart = count_equivalent_partitions([typ1, typ2, typ3, typ4])
+
+                    #weight = 1.0
+                    #for n in npart:
+                    #    weight /= factorial(n)
+                    weight = get_weight_from_contraction([typ1, typ2, typ3, typ4])
+
+
                     # if [typ1, spin1] == [typ2, spin2]:
                     #     weight *= 0.5
                     # if [typ1, spin1] == [typ3, spin3]:
@@ -588,10 +593,11 @@ def quintuple_contraction(expression, order):
                         if equivalence == '345,12':
                             if idr < ids or idr < idt or ids < idt or idp < idq: continue
 
-                        npart = count_equivalent_partitions([typ1, typ2, typ3, typ4, typ5])
-                        weight = 1.0
-                        for n in npart:
-                            weight /= factorial(n)
+                        #npart = count_equivalent_partitions([typ1, typ2, typ3, typ4, typ5])
+                        #weight = 1.0
+                        #for n in npart:
+                        #    weight /= factorial(n)
+                        weight = get_weight_from_contraction([typ1, typ2, typ3, typ4, typ5])
 
                         arr1 = list(expression.A.indices)
                         arr1[expression.A.contracted_indices[0]] = p
@@ -626,18 +632,30 @@ def quintuple_contraction(expression, order):
     return list_of_expressions
 
 
-def count_equivalent_partitions(lst):
+def get_weight_from_contraction(lst):
 
-    temp = [lst.count(x) for x in lst]
+    types = ["active_holea", "inactive_holea", "active_holeb", "inactive_holeb",
+             "active_particlea", "inactive_particlea", "active_particleb", "inactive_particleb"]
 
-    partition_count = [0] * len(lst)
+    ntot = 1.0
+    for typ in types:
+        n = lst.count(typ)
+        ntot /= factorial(n)
 
-    cnt = 0
-    for i, t in enumerate(temp):
-        cnt += t
-        if cnt > len(lst):
-            break
-        else:
-            partition_count[i] = t
+    return ntot
 
-    return partition_count
+# def count_equivalent_partitions(lst):
+#
+#     temp = [lst.count(x) for x in lst]
+#
+#     partition_count = [0] * len(lst)
+#
+#     cnt = 0
+#     for i, t in enumerate(temp):
+#         cnt += t
+#         if cnt > len(lst):
+#             break
+#         else:
+#             partition_count[i] = t
+#
+#     return partition_count

@@ -118,10 +118,10 @@ def get_swapping_dict(contr, spincase):
                         'act_particle_beta': []
                         }
         if spincase in ['b']:
-            dict_out = {'virt_beta': [x for x in ['a'] if x in contr],
-                        'core_beta': [x for x in ['i'] if x in contr],
-                        'act_hole_beta': [x for x in ['I'] if x in contr],
-                        'act_particle_beta': [x for x in ['A'] if x in contr],
+            dict_out = {'virt_beta': [x for x in ['a', 'b', 'c', 'd'] if x in contr],
+                        'core_beta': [x for x in ['i', 'j', 'k', 'l'] if x in contr],
+                        'act_hole_beta': [x for x in ['I', 'J', 'K', 'L'] if x in contr],
+                        'act_particle_beta': [x for x in ['A', 'B', 'C', 'D'] if x in contr],
                         'virt_alpha': [],
                         'core_alpha': [],
                         'act_hole_alpha': [],
@@ -129,10 +129,10 @@ def get_swapping_dict(contr, spincase):
                         }
     if order == 2:
         if spincase in ['aa']:
-            dict_out = {'virt_alpha': [x for x in ['a', 'b'] if x in contr],
-                        'core_alpha': [x for x in ['i', 'j'] if x in contr],
-                        'act_hole_alpha': [x for x in ['I', 'J'] if x in contr],
-                        'act_particle_alpha': [x for x in ['A', 'B'] if x in contr],
+            dict_out = {'virt_alpha': [x for x in ['a', 'b', 'c', 'd'] if x in contr],
+                        'core_alpha': [x for x in ['i', 'j', 'k', 'l'] if x in contr],
+                        'act_hole_alpha': [x for x in ['I', 'J', 'K', 'L'] if x in contr],
+                        'act_particle_alpha': [x for x in ['A', 'B', 'C', 'D'] if x in contr],
                         'virt_beta': [],
                         'core_beta': [],
                         'act_hole_beta': [],
