@@ -57,7 +57,7 @@ def contract(expression, num_active):
     # retain only those expressions in which T (or R) is restricted to
     # the appropriate active space paritioning
     for expr in all_contractions:
-        if len(expr.B.indices) == 6:
+        if len(expr.B.indices) == 6 or len(expr.B.indices) == 8:
             if check_include_term(expr.B.indices, num_active, order):
                 retained_contractions.append(expr)
         else:
@@ -214,7 +214,7 @@ def triple_contraction(expression, order):
                 if order == 3:
                     new_arr, sign_perm = fix_t3_indices(arr2, expression.B.spin)
                 elif order == 4:
-                    new_arr, sign_perm = fix_t3_indices(arr2, expression.B.spin)
+                    new_arr, sign_perm = fix_t4_indices(arr2, expression.B.spin)
                 sign = expression.sign * sign_perm
 
                 term1 = Term(expression.A.symbol,

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: actgen
-Version: 0+untagged.30.g4c70125.dirty
+Version: 0+untagged.35.g8578569.dirty
 Summary: A Python tool to generate code for active-space coupled-cluster routines
 Author: Karthik Gururangan
 Author-email: gururang@msu.edu

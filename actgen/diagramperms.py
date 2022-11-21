@@ -48,7 +48,7 @@ def generate_active_permutations(reference_expression, projection_spincase, verb
 
                                     if verbose:
                                         print('\n')
-                                        print('Original:',contr1, contr2, sign)
+                                        print('Original:', contr1, contr2, sign)
                                         print(perm1, perm2, perm3, perm4, perm5, perm6, perm7, perm8)
                                         print('-----------------------------------------')
 

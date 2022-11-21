@@ -3,7 +3,7 @@ src := actgen
 
 .PHONY: install
 install:
-	pip install -e .
+	$(CONDA_PREFIX)/bin/pip install -e .
 
 .PHONY: check-dist
 check-dist:
