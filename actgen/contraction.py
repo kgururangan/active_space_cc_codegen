@@ -2,7 +2,11 @@ from math import factorial
 
 from actgen.indices import fix_t3_indices, fix_t4_indices, type_of_index
 from actgen.term import Term, BinaryExpression
-from actgen.utilities import check_include_term
+from actgen.utilities import check_include_term, check_include_term_eaip
+
+# [TODO]: All contraction subcases (single, double, triple) need to be modified to deal with EA/IP cases using 5 indices
+# To do this, you need to check whether the R operator is of the EA or IP type by counting the number of hole and
+# particle indices
 
 # [TODO]: The equivalence handling in this module needs to be change
 # I noticed that the equivalence is determined using the "bare" form of contraction indices
@@ -57,9 +61,12 @@ def contract(expression, num_active):
     # retain only those expressions in which T (or R) is restricted to
     # the appropriate active space paritioning
     for expr in all_contractions:
-        if len(expr.B.indices) == 6 or len(expr.B.indices) == 8:
+        if len(expr.B.indices) == 6 or len(expr.B.indices) == 8: # this will check for active spaces in CCSDT or CCSDTQ cases
             if check_include_term(expr.B.indices, num_active, order):
                 retained_contractions.append(expr)
+        # elif len(expr.B.indices) == 5:
+        #     if check_include_term_eaip(expr.B.indices, num_active, order): # this will check for active spaces in EA-EOMCCSDt and IP-EOMCCSDt cases
+        #         retained_contractions.append(expr)
         else:
             retained_contractions.append(expr)
 

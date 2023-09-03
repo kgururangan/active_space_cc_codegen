@@ -1,3 +1,4 @@
+#from actgen.indices import particle_or_hole
 
 def argsort(seq):
     # http://stackoverflow.com/questions/3071415/...
@@ -81,6 +82,40 @@ def check_include_term(contr, nact_scheme, order):
         include_term = True
     return include_term
 
+def check_include_term_eaip(contr, nact_scheme, order):
+
+    n_particle = 0
+    n_hole = 0
+    for idx, c in enumerate(contr):
+        if particle_or_hole(c) == "particle":
+            n_particle += 1
+        if particle_or_hole(c) == "hole":
+            n_hole += 1
+
+    if n_particle > n_hole:
+        eaip_case = "ea"
+    if n_particle < n_hole:
+        eaip_case = "ip"
+
+    num_act_hole = 0
+    num_act_particle = 0
+    for idx, c in enumerate(contr):
+        if c.isupper():
+            if particle_or_hole(c) == "particle":
+                num_act_particle += 1
+            elif particle_or_hole(c) == "hole":
+                num_act_hole += 1
+    include_term = False
+
+    if eaip_case == "ea":
+        if num_act_particle >= nact_scheme:
+            include_term = True
+    elif eaip_case == "ip":
+        if num_act_hole >= nact_scheme:
+            include_term = True
+
+    return include_term
+
 def get_label_from_projection(projection):
     label = ''
     order = len(projection)
@@ -111,3 +146,14 @@ def numbers_to_active_string(num_string, order):
         if num_string[i] == '0':
             new_string += s.lower()
     return new_string
+
+## COPIED OVER FROM INDICES
+def particle_or_hole(char):
+    if len(char) > 1:
+        char1 = char[0]
+    else:
+        char1 = char
+    if char1 in ['m', 'n', 'o', 'i', 'j', 'k', 'l', 'M', 'N', 'O', 'I', 'J', 'K', 'L']:
+        return 'hole'
+    if char1 in ['e', 'f', 'g', 'a', 'b', 'c', 'd', 'E', 'F', 'G', 'A', 'B', 'C', 'D']:
+        return 'particle'

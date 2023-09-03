@@ -116,6 +116,78 @@ def fix_t3_indices(arr, spin):
 
     return new_arr, sign
 
+def fix_ea_r3_indices(arr, spin):
+    # [TODO]:
+    # Modify this routine to be consistent with the R.aaa, R.aab, and R.abb ordering used in EA-EOMCC(3p-2h)
+    # i.e.,
+    # R.aaa(abcjk), R.aab(abc~jk~), R.abb(ab~c~j~k~)
+    sign = 1.0
+
+    perm = list(range(6))
+    if spin in ['aaa']:
+        particles = arr[:3]
+        holes = arr[3:]
+        perm[:3] = fix_particle_index(particles)
+        perm[3:] = fix_hole_index(holes, 3)
+        new_arr = [arr[i] for i in perm]
+        sign = sign * signPermutation(perm[:3]) * signPermutation([x - 3 for x in perm[3:]])
+
+    perm = list(range(6))
+    if spin in ['aab']:
+        particles = arr[:2]
+        holes = arr[3:5]
+        perm[:2] = fix_particle_index(particles)
+        perm[3:5] = fix_hole_index(holes, 3)
+        new_arr = [arr[i] for i in perm]
+        sign = sign * signPermutation(perm[:2]) * signPermutation([x - 3 for x in perm[3:5]])
+
+    perm = list(range(6))
+    if spin in ['abb']:
+        particles = arr[1:3]
+        holes = arr[4:]
+        perm[1:3] = [x + 1 for x in fix_particle_index(particles)]
+        perm[4:] = [x + 1 for x in fix_hole_index(holes, 3)]
+        new_arr = [arr[i] for i in perm]
+        sign = sign * signPermutation([x - 1 for x in perm[1:3]]) * signPermutation([x - 4 for x in perm[4:]])
+
+    return new_arr, sign
+
+def fix_ip_r3_indices(arr, spin):
+    # [TODO]:
+    # Modify this routine to be consistent with the R.aaa, R.aab, and R.abb ordering used in IP-EOMCC(3h-2p)
+    # i.e.,
+    # R.aaa(ibcjk), R.aab(ibc~jk~), R.abb(ib~c~j~k~)
+    sign = 1.0
+
+    perm = list(range(6))
+    if spin in ['aaa']:
+        particles = arr[:3]
+        holes = arr[3:]
+        perm[:3] = fix_particle_index(particles)
+        perm[3:] = fix_hole_index(holes, 3)
+        new_arr = [arr[i] for i in perm]
+        sign = sign * signPermutation(perm[:3]) * signPermutation([x - 3 for x in perm[3:]])
+
+    perm = list(range(6))
+    if spin in ['aab']:
+        particles = arr[:2]
+        holes = arr[3:5]
+        perm[:2] = fix_particle_index(particles)
+        perm[3:5] = fix_hole_index(holes, 3)
+        new_arr = [arr[i] for i in perm]
+        sign = sign * signPermutation(perm[:2]) * signPermutation([x - 3 for x in perm[3:5]])
+
+    perm = list(range(6))
+    if spin in ['abb']:
+        particles = arr[1:3]
+        holes = arr[4:]
+        perm[1:3] = [x + 1 for x in fix_particle_index(particles)]
+        perm[4:] = [x + 1 for x in fix_hole_index(holes, 3)]
+        new_arr = [arr[i] for i in perm]
+        sign = sign * signPermutation([x - 1 for x in perm[1:3]]) * signPermutation([x - 4 for x in perm[4:]])
+
+    return new_arr, sign
+
 
 def fix_t4_indices(arr, spin):
     sign = 1.0

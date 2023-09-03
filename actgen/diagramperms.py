@@ -101,7 +101,6 @@ def generate_active_permutations(reference_expression, projection_spincase, verb
 
     return unique_objects(expression_permutations)
 
-
 def get_swapping_dict(contr, spincase):
 
     order = len(spincase)
